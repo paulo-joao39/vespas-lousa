@@ -117,9 +117,47 @@
         </section>
 
         <section id="tratamentos" class="secao" hidden>
-            <h2>Registar tratamento</h2>
-            <p>O módulo de tratamentos será desenvolvido na próxima etapa.</p>
-        </section>
+
+    <h2>Registar tratamento</h2>
+
+    <form id="form-tratamento">
+
+        <label for="ninho-tratamento">Ninho a tratar</label>
+        <select id="ninho-tratamento" name="ninhoId" required>
+            <option value="">Selecionar ninho</option>
+        </select>
+
+        <label for="data-tratamento">Data do tratamento</label>
+        <input
+            type="date"
+            id="data-tratamento"
+            name="data"
+            required
+        >
+
+        <label for="metodo-tratamento">Método utilizado</label>
+        <input
+            type="text"
+            id="metodo-tratamento"
+            name="metodo"
+            placeholder="Ex.: remoção do ninho"
+            required
+        >
+
+        <label for="observacoes-tratamento">Observações</label>
+        <textarea
+            id="observacoes-tratamento"
+            name="observacoes"
+            rows="4"
+        ></textarea>
+
+        <button type="submit">Registar tratamento</button>
+
+    </form>
+
+    <p id="mensagem-tratamento" role="status" aria-live="polite"></p>
+
+    </section>
 
         <section id="pesquisa" class="secao" hidden>
             <h2>Pesquisar ocorrências</h2>
