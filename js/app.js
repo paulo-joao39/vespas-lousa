@@ -1,11 +1,9 @@
-// ========================================
-// FICHEIRO PRINCIPAL DA APLICAÇÃO
-// Cadastro BML PJ
-// ========================================
-
 import { iniciarNavegacao } from './navegacao.js';
+import { iniciarNinhos } from './ninhos.js';
 
-// Inicializar a navegação
-iniciarNavegacao();
+document.addEventListener('DOMContentLoaded', () => {
+    iniciarNavegacao();
+    iniciarNinhos();
 
-console.log('Sistema de Cadastro BML PJ iniciado com sucesso.');
+    console.log('Sistema de Gestão de Vespa-Asiática — Lousã iniciado.');
+});
