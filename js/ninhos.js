@@ -6,12 +6,45 @@ import {
 export function iniciarNinhos() {
     const formulario = document.getElementById('form-ninho');
     const mensagem = document.getElementById('mensagem-ninho');
+    const listaNinhos = document.getElementById('lista-ninhos');
 
     if (!formulario) {
         console.error('O formulário de ninhos não foi encontrado.');
         return;
     }
 
+    // Apresentar os ninhos guardados na tabela
+    function atualizarTabela() {
+        if (!listaNinhos) {
+            return;
+        }
+
+        const ninhos = obterNinhos();
+
+        listaNinhos.replaceChildren();
+
+        ninhos.forEach((ninho) => {
+            const linha = document.createElement('tr');
+
+            const valores = [
+                ninho.referencia,
+                ninho.data,
+                ninho.freguesia,
+                ninho.localizacao || '—',
+                ninho.estado
+            ];
+
+            valores.forEach((valor) => {
+                const celula = document.createElement('td');
+                celula.textContent = valor || '—';
+                linha.appendChild(celula);
+            });
+
+            listaNinhos.appendChild(linha);
+        });
+    }
+
+    // Registar um novo ninho
     formulario.addEventListener('submit', function (evento) {
         evento.preventDefault();
 
@@ -56,6 +89,10 @@ export function iniciarNinhos() {
             mensagem.style.color = '#276749';
 
             formulario.reset();
+
+            // Atualizar a tabela após o registo
+            atualizarTabela();
+
         } catch (erro) {
             console.error('Erro ao guardar o ninho:', erro);
 
@@ -64,4 +101,7 @@ export function iniciarNinhos() {
             mensagem.style.color = '#c53030';
         }
     });
+
+    // Carregar os registos existentes ao abrir a secção
+    atualizarTabela();
 }
