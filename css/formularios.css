@@ -1,0 +1,112 @@
+/* ========================================
+   FORMULÁRIOS
+   Cadastro BML PJ
+   ======================================== */
+
+#form-ninho {
+    max-width: 800px;
+    padding: 25px;
+
+    background-color: #ffffff;
+    border-radius: 12px;
+
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Título dos formulários */
+#ninhos h2,
+#tratamentos h2,
+#pesquisa h2,
+#relatorios h2 {
+    margin-bottom: 25px;
+    color: #19395f;
+}
+
+/* Etiquetas */
+#form-ninho label {
+    display: block;
+    margin: 18px 0 6px;
+
+    color: #243447;
+    font-weight: bold;
+}
+
+/* Campos */
+#form-ninho input,
+#form-ninho select,
+#form-ninho textarea {
+    display: block;
+    width: 100%;
+    padding: 12px;
+
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+
+    background-color: #ffffff;
+    color: #243447;
+}
+
+/* Área de observações */
+#form-ninho textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Botão de registo */
+#form-ninho button {
+    margin-top: 25px;
+    padding: 13px 22px;
+
+    border: none;
+    border-radius: 6px;
+
+    background-color: #2f75b5;
+    color: #ffffff;
+
+    font-weight: bold;
+}
+
+/* Efeito do botão */
+#form-ninho button:hover {
+    background-color: #19395f;
+}
+
+/* Mensagens de resposta */
+#mensagem-ninho {
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+/* Pesquisa */
+#termo-pesquisa {
+    max-width: 500px;
+    margin: 0 10px 15px 0;
+}
+
+#btn-pesquisar {
+    padding: 11px 20px;
+
+    border: none;
+    border-radius: 6px;
+
+    background-color: #2f75b5;
+    color: #ffffff;
+
+    font-weight: bold;
+}
+
+/* Resultados */
+#resultados-pesquisa {
+    margin-top: 20px;
+}
+
+/* Telemóveis */
+@media (max-width: 600px) {
+    #form-ninho {
+        padding: 18px;
+    }
+
+    #btn-pesquisar {
+        margin-top: 10px;
+    }
+}

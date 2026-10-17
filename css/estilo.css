@@ -1,0 +1,93 @@
+/* ========================================
+   SISTEMA DE GESTÃO — VESPA-ASIÁTICA
+   Cadastro BML PJ | Versão 0.01 | 2026
+   ======================================== */
+
+/* Configuração geral */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    color: #243447;
+    background-color: #edf2f7;
+    line-height: 1.5;
+}
+
+/* Títulos */
+h1,
+h2,
+h3 {
+    margin-top: 0;
+}
+
+/* Conteúdo principal */
+main {
+    width: 100%;
+    max-width: 1500px;
+    min-height: 60vh;
+    margin: 0 auto;
+    padding: 25px;
+}
+
+/* Secções */
+.secao {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+/* Elementos de formulário */
+input,
+select,
+textarea,
+button {
+    font: inherit;
+}
+
+/* Campos */
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cbd5e0;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+
+/* Foco nos campos */
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid #3182ce;
+    outline-offset: 1px;
+}
+
+/* Botões */
+button {
+    cursor: pointer;
+}
+
+/* Elementos ocultos */
+[hidden] {
+    display: none !important;
+}
+
+/* Adaptação a telemóveis */
+@media (max-width: 600px) {
+    main {
+        padding: 15px;
+    }
+
+    body {
+        font-size: 15px;
+    }
+}

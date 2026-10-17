@@ -1,0 +1,68 @@
+/* ========================================
+   MENU PRINCIPAL
+   Cadastro BML PJ
+   ======================================== */
+
+#menu {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+
+    width: 100%;
+    padding: 15px 20px;
+
+    background-color: #ffffff;
+    border-bottom: 1px solid #d5dde5;
+
+    position: relative;
+    z-index: 10;
+}
+
+/* Botões do menu */
+#menu button {
+    padding: 12px 20px;
+
+    border: none;
+    border-radius: 6px;
+
+    background-color: #2f75b5;
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+/* Efeito ao passar o rato */
+#menu button:hover {
+    background-color: #19395f;
+    transform: translateY(-2px);
+
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Indicação de foco pelo teclado */
+#menu button:focus-visible {
+    outline: 3px solid #f0b429;
+    outline-offset: 3px;
+}
+
+/* Adaptação a telemóveis */
+@media (max-width: 600px) {
+    #menu {
+        padding: 12px;
+        gap: 8px;
+    }
+
+    #menu button {
+        flex: 1 1 140px;
+        padding: 12px 10px;
+        font-size: 12px;
+    }
+}

@@ -1,0 +1,58 @@
+/* ========================================
+   CABEÇALHO DA APLICAÇÃO
+   ======================================== */
+
+#cabecalho {
+    width: 100%;
+    min-height: 150px;
+    padding: 30px 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #19395f;
+    color: #ffffff;
+
+    text-align: center;
+}
+
+/* Caixa do título */
+.caixa-titulo {
+    width: 100%;
+    max-width: 1200px;
+    padding: 15px;
+
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+
+    background-color: #244b78;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Título principal */
+.caixa-titulo h1 {
+    margin: 0;
+
+    color: #ffffff;
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: bold;
+
+    letter-spacing: 1px;
+}
+
+/* Adaptação a telemóveis */
+@media (max-width: 600px) {
+    #cabecalho {
+        min-height: 110px;
+        padding: 15px 10px;
+    }
+
+    .caixa-titulo {
+        padding: 12px;
+    }
+
+    .caixa-titulo h1 {
+        letter-spacing: 0;
+    }
+}

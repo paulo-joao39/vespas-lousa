@@ -1,0 +1,32 @@
+/* ========================================
+   RODAPÉ DA APLICAÇÃO
+   Cadastro BML PJ
+   ======================================== */
+
+#rodape {
+    width: 100%;
+    padding: 20px;
+
+    background-color: #142b46;
+    color: #ffffff;
+
+    text-align: center;
+    font-size: 13px;
+
+    border-top: 4px solid #2f75b5;
+    margin-top: 30px;
+}
+
+/* Texto do rodapé */
+#rodape p {
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Adaptação a telemóveis */
+@media (max-width: 600px) {
+    #rodape {
+        padding: 16px 10px;
+        font-size: 12px;
+    }
+}
