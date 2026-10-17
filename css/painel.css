@@ -79,3 +79,66 @@
         padding: 20px;
     }
 }
+
+/* ========================================
+   TABELA DE NINHOS REGISTADOS
+   ======================================== */
+
+.tabela-responsiva {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+#tabela-ninhos {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    color: #19395f;
+}
+
+#tabela-ninhos thead {
+    background-color: #19395f;
+    color: #ffffff;
+}
+
+#tabela-ninhos th,
+#tabela-ninhos td {
+    padding: 14px 18px;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+#tabela-ninhos th {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+#tabela-ninhos td {
+    font-size: 14px;
+}
+
+#tabela-ninhos tbody tr:nth-child(even) {
+    background-color: #f5f8fc;
+}
+
+#tabela-ninhos tbody tr:hover {
+    background-color: #e8f1fb;
+}
+
+#tabela-ninhos tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Adaptação a telemóveis */
+@media (max-width: 600px) {
+    #tabela-ninhos th,
+    #tabela-ninhos td {
+        padding: 11px 12px;
+        font-size: 13px;
+    }
+}
+
