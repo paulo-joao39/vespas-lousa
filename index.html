@@ -1,74 +1,129 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
+
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Eu sou mau</title>
+    <meta name="description" content="Sistema de Gestão de Ocorrências de Vespa-Asiática da Lousã">
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-        }
+    <title>Sistema de Gestão — Vespa-Asiática | Lousã</title>
 
-        header {
-            background-color: #222222;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .caixa-titulo {
-            display: inline-block;
-            background-color: #c62828;
-            color: white;
-            padding: 20px 50px;
-            border: 3px solid black;
-            border-radius: 12px;
-            font-size: 32px;
-            font-weight: bold;
-        }
-
-        main {
-            text-align: center;
-            margin-top: 50px;
-            font-size: 20px;
-        }
-    
-    .rodape {
-    background-color: #222222;
-    color: #ffffff;
-    text-align: center;
-    padding: 15px;
-    margin-top: 40px;
-    font-family: Arial, sans-serif;
-    font-size: 13px;
-    border-top: 3px solid #c62828;
-    }
-
-    .rodape p {
-    margin: 0;
-    }   
-    
-    </style>
+    <!-- Estilos principais -->
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/cabecalho.css">
+    <link rel="stylesheet" href="css/menu.css">
+    <link rel="stylesheet" href="css/painel.css">
+    <link rel="stylesheet" href="css/formularios.css">
+    <link rel="stylesheet" href="css/rodape.css">
 </head>
 
 <body>
 
-    <header>
+    <!-- CABEÇALHO -->
+    <header id="cabecalho">
         <div class="caixa-titulo">
-            Eu sou mau
+            <h1>Eu sou mau</h1>
         </div>
     </header>
 
-    <main>
-        <p>Bem-vindo à minha página!</p>
+    <!-- MENU PRINCIPAL -->
+    <nav id="menu" aria-label="Menu principal">
+        <button type="button" data-seccao="dashboard">Dashboard</button>
+        <button type="button" data-seccao="ninhos">Novo ninho</button>
+        <button type="button" data-seccao="tratamentos">Registar tratamento</button>
+        <button type="button" data-seccao="pesquisa">Pesquisar</button>
+        <button type="button" data-seccao="relatorios">Relatórios</button>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main id="conteudo">
+
+        <section id="dashboard" class="secao">
+            <h2>Painel de controlo</h2>
+
+            <div class="cartoes">
+                <article class="cartao">
+                    <h3>Total de ninhos</h3>
+                    <p id="total-ninhos">0</p>
+                </article>
+
+                <article class="cartao">
+                    <h3>Por tratar</h3>
+                    <p id="ninhos-pendentes">0</p>
+                </article>
+
+                <article class="cartao">
+                    <h3>Tratados</h3>
+                    <p id="ninhos-tratados">0</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="ninhos" class="secao" hidden>
+            <h2>Registar novo ninho</h2>
+
+            <form id="form-ninho">
+
+                <label for="referencia">Referência do ninho</label>
+                <input type="text" id="referencia" name="referencia" required>
+
+                <label for="data">Data da ocorrência</label>
+                <input type="date" id="data" name="data" required>
+
+                <label for="freguesia">Freguesia</label>
+                <input type="text" id="freguesia" name="freguesia" required>
+
+                <label for="localizacao">Localização</label>
+                <input type="text" id="localizacao" name="localizacao">
+
+                <label for="estado">Estado</label>
+                <select id="estado" name="estado" required>
+                    <option value="Pendente">Por tratar</option>
+                    <option value="Tratado">Tratado</option>
+                </select>
+
+                <label for="observacoes">Observações</label>
+                <textarea id="observacoes" name="observacoes" rows="4"></textarea>
+
+                <button type="submit">Registar ninho</button>
+
+            </form>
+
+            <p id="mensagem-ninho" role="status"></p>
+        </section>
+
+        <section id="tratamentos" class="secao" hidden>
+            <h2>Registar tratamento</h2>
+            <p>O módulo de tratamentos será desenvolvido na próxima etapa.</p>
+        </section>
+
+        <section id="pesquisa" class="secao" hidden>
+            <h2>Pesquisar ocorrências</h2>
+
+            <label for="termo-pesquisa">Referência ou freguesia</label>
+            <input type="search" id="termo-pesquisa">
+
+            <button type="button" id="btn-pesquisar">Pesquisar</button>
+
+            <div id="resultados-pesquisa"></div>
+        </section>
+
+        <section id="relatorios" class="secao" hidden>
+            <h2>Relatórios</h2>
+            <p>O módulo de relatórios será desenvolvido numa próxima etapa.</p>
+        </section>
+
     </main>
 
-    <footer class="rodape">
-    <p>v0.01 | 2026 | Cadastro BML PJ - Papa Julias para os amigos!!</p>
+    <!-- RODAPÉ -->
+    <footer id="rodape">
+        <p>v0.01 | 2026 | Cadastro BML PJ</p>
     </footer>
+
+    <!-- JavaScript modular -->
+    <script type="module" src="js/app.js"></script>
 
 </body>
 </html>
