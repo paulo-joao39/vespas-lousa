@@ -247,17 +247,40 @@
         <fieldset>
             <legend>5. Fotografia e observações</legend>
 
-            <label for="fotografia">Fotografia do ninho</label>
+        <label for="fotografia">Fotografia do ninho</label>
 
-        <input
-            type="file"
-            id="fotografia"
-            name="fotografia"
-            accept="image/*"
-        >
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+
+            <label for="fotografia-camera"
+                style="display:inline-block; padding:12px 18px; background:#287a45; color:white; border-radius:6px; cursor:pointer; font-weight:bold;">
+                📷 Tirar fotografia
+            </label>
+
+            <input
+                type="file"
+                id="fotografia-camera"
+                accept="image/*"
+                capture="environment"
+                style="display:none;"
+            >
+
+            <label for="fotografia"
+                style="display:inline-block; padding:12px 18px; background:#2874b8; color:white; border-radius:6px; cursor:pointer; font-weight:bold;">
+                📁 Escolher ficheiro
+            </label>
+
+            <input
+                type="file"
+                id="fotografia"
+                name="fotografia"
+                accept="image/*"
+                style="display:none;"
+            >
+
+        </div>
 
         <small>
-            Podes tirar uma fotografia com a câmara ou escolher uma imagem dos ficheiros.
+            Tira uma fotografia com a câmara ou escolhe uma imagem dos ficheiros.
         </small>
 
         <div id="pre-visualizacao-fotografia" hidden>
@@ -266,7 +289,7 @@
             <img
                 id="imagem-fotografia"
                 alt="Pré-visualização da fotografia do ninho"
-                style="max-width: 300px; max-height: 300px; display: block;"
+                style="max-width:300px; max-height:300px; display:block;"
             >
 
             <button type="button" id="remover-fotografia" class="botao-secundario">
