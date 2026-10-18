@@ -28,6 +28,9 @@ export function atualizarDashboard() {
     }
 
     const georreferenciados = ninhos.filter(ninho => {
+    if (ninho.estado !== 'Tratado') {
+        return false;
+    }
         const latitude = Number(ninho.latitude);
         const longitude = Number(ninho.longitude);
 
@@ -60,43 +63,68 @@ export function atualizarDashboard() {
         const cartao = document.createElement('article');
         cartao.className = 'cartao';
 
-        const titulo = document.createElement('h4');
-        titulo.textContent =
-            `Ninho ${ninho.identificador || ninho.referencia || 'Sem número'}`;
+       const cartao = document.createElement('article');
+cartao.className = 'cartao';
 
-        const detalhes = document.createElement('p');
-        detalhes.textContent =
-            `${ninho.freguesia || 'Freguesia não indicada'} — ` +
-            `${ninho.tipoNinho || 'Tipo não indicado'} — ` +
-            `Estado: ${ninho.estado || 'Não indicado'}`;
+const titulo = document.createElement('h4');
+titulo.textContent =
+    `Ninho ${ninho.identificador || ninho.referencia || 'Sem número'}`;
 
-        const coordenadas = document.createElement('p');
-        coordenadas.textContent =
-            `Latitude: ${Number(ninho.latitude).toFixed(5)} | ` +
-            `Longitude: ${Number(ninho.longitude).toFixed(5)}`;
+titulo.style.cursor = 'pointer';
+titulo.style.color = '#24558a';
+titulo.title = 'Clique para consultar todos os dados do ninho';
 
-        const mapa = document.createElement('a');
-        mapa.href =
-            `https://www.google.com/maps?q=${encodeURIComponent(ninho.latitude)},${encodeURIComponent(ninho.longitude)}`;
-        mapa.target = '_blank';
-        mapa.rel = 'noopener noreferrer';
-        mapa.textContent = '📍 Abrir no Google Maps';
+const resumo = document.createElement('p');
+resumo.textContent =
+    `${ninho.freguesia || 'Freguesia não indicada'} — ` +
+    `${ninho.tipoNinho || 'Tipo não indicado'} — ` +
+    `Estado: ${ninho.estado || 'Não indicado'}`;
 
-        cartao.append(titulo, detalhes, coordenadas, mapa);
+const detalhes = document.createElement('div');
+detalhes.style.display = 'none';
 
-        if (ninho.fotografia) {
-            const fotografia = document.createElement('img');
-            fotografia.src = ninho.fotografia;
-            fotografia.alt = 'Fotografia do ninho';
-            fotografia.style.maxWidth = '220px';
-            fotografia.style.maxHeight = '220px';
-            fotografia.style.display = 'block';
-            fotografia.style.marginTop = '10px';
+const adicionarDado = (rotulo, valor) => {
+    const paragrafo = document.createElement('p');
+    paragrafo.textContent = `${rotulo}: ${valor || 'Não indicado'}`;
+    detalhes.appendChild(paragrafo);
+};
 
-            cartao.appendChild(fotografia);
-        }
+adicionarDado('Identificador', ninho.identificador);
+adicionarDado('Referência', ninho.referencia);
+adicionarDado('Freguesia', ninho.freguesia);
+adicionarDado('Tipo de ninho', ninho.tipoNinho);
+adicionarDado('Estado', ninho.estado);
+adicionarDado('Latitude', ninho.latitude);
+adicionarDado('Longitude', ninho.longitude);
 
-        listaGPS.appendChild(cartao);
+if (ninho.fotografia) {
+    const fotografia = document.createElement('img');
+    fotografia.src = ninho.fotografia;
+    fotografia.alt = 'Fotografia do ninho';
+    fotografia.style.maxWidth = '100%';
+    fotografia.style.maxHeight = '350px';
+    fotografia.style.display = 'block';
+    fotografia.style.marginTop = '10px';
+
+    detalhes.appendChild(fotografia);
+}
+
+const mapa = document.createElement('a');
+mapa.href =
+    `https://www.google.com/maps?q=${encodeURIComponent(ninho.latitude)},${encodeURIComponent(ninho.longitude)}`;
+mapa.target = '_blank';
+mapa.rel = 'noopener noreferrer';
+mapa.textContent = '📍 Abrir no Google Maps';
+
+detalhes.appendChild(mapa);
+
+titulo.addEventListener('click', () => {
+    detalhes.style.display =
+        detalhes.style.display === 'none' ? 'block' : 'none';
+});
+
+cartao.append(titulo, resumo, detalhes);
+listaGPS.appendChild(cartao);
     });
 }
 
