@@ -11,7 +11,7 @@ export function iniciarNinhos() {
     const botaoLimpar = document.getElementById('limpar-ninho');
 
     // Mostra o próximo número de registo do mês atual.
-function atualizarProximoNumeroRegisto() {
+    function atualizarProximoNumeroRegisto() {
     const elemento = document.getElementById('proximo-numero-registo');
 
     if (!elemento) {
@@ -385,6 +385,62 @@ atualizarOutraUnidade();
                 'Não foi possível guardar o ninho. Verifica o espaço de armazenamento.';
             mensagem.style.color = '#c53030';
         }
+    }
+
+        // Obter a localização GPS do equipamento.
+    const botaoGPS = document.getElementById('obter-localizacao-gps');
+    const campoLatitude = document.getElementById('latitude');
+    const campoLongitude = document.getElementById('longitude');
+    const mensagemGPS = document.getElementById('mensagem-gps');
+
+    if (botaoGPS) {
+        botaoGPS.addEventListener('click', function () {
+            if (!navigator.geolocation) {
+                mensagemGPS.textContent =
+                    'Este equipamento não suporta localização GPS.';
+                return;
+            }
+
+            mensagemGPS.textContent = 'A obter localização...';
+            botaoGPS.disabled = true;
+
+            navigator.geolocation.getCurrentPosition(
+                function (posicao) {
+                    const latitude = posicao.coords.latitude;
+                    const longitude = posicao.coords.longitude;
+
+                    campoLatitude.value = latitude.toFixed(5);
+                    campoLongitude.value = longitude.toFixed(5);
+
+                    mensagemGPS.textContent =
+                        'Localização obtida com sucesso!';
+
+                    botaoGPS.disabled = false;
+                },
+                function (erro) {
+                    let mensagem = 'Não foi possível obter a localização.';
+
+                    if (erro.code === 1) {
+                        mensagem =
+                            'Autorização de localização recusada. Permite o acesso à localização.';
+                    } else if (erro.code === 2) {
+                        mensagem =
+                            'Localização indisponível. Tenta novamente.';
+                    } else if (erro.code === 3) {
+                        mensagem =
+                            'O GPS demorou demasiado tempo. Tenta novamente.';
+                    }
+
+                    mensagemGPS.textContent = mensagem;
+                    botaoGPS.disabled = false;
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                    maximumAge: 0
+                }
+            );
+        });
     }
 
     // Preparação inicial.
