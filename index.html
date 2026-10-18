@@ -77,7 +77,25 @@
             <input type="date" id="data" name="data" required>
 
             <label for="unidade">Unidade responsável *</label>
-            <input type="text" id="unidade" name="unidade" required autocomplete="off">
+
+<select id="unidade" name="unidade" required>
+    <option value="">Selecionar unidade responsável</option>
+    <option value="BML Lousã">BML Lousã</option>
+    <option value="Veterinário Municipal">Veterinário Municipal</option>
+    <option value="Câmara Municipal">Câmara Municipal</option>
+    <option value="Proteção Civil">Proteção Civil</option>
+    <option value="Outra">Outra</option>
+</select>
+
+<div id="detalhe-outra-unidade" hidden>
+    <label for="outra-unidade">Indicar outra unidade *</label>
+    <input
+        type="text"
+        id="outra-unidade"
+        name="outraUnidade"
+        placeholder="Nome da entidade responsável"
+    >
+</div>
 
         </fieldset>
 
