@@ -10,6 +10,58 @@ export function iniciarNinhos() {
     const seletorLocal = document.getElementById('localizacao');
     const botaoLimpar = document.getElementById('limpar-ninho');
 
+    // Elementos da fotografia.
+    const fotografiaInput = document.getElementById('fotografia');
+    const preVisualizacao = document.getElementById('pre-visualizacao-fotografia');
+    const imagemFotografia = document.getElementById('imagem-fotografia');
+    const botaoRemoverFotografia = document.getElementById('remover-fotografia');
+
+    // Mostra a fotografia selecionada.
+    if (fotografiaInput) {
+        fotografiaInput.addEventListener('change', function () {
+            const ficheiro = fotografiaInput.files[0];
+
+            if (!ficheiro) {
+                limparPreVisualizacao();
+                return;
+            }
+
+            if (!ficheiro.type.startsWith('image/')) {
+                alert('Seleciona um ficheiro de imagem válido.');
+                fotografiaInput.value = '';
+                limparPreVisualizacao();
+                return;
+            }
+
+            const leitor = new FileReader();
+
+            leitor.onload = function () {
+                imagemFotografia.src = leitor.result;
+                preVisualizacao.hidden = false;
+            };
+
+            leitor.readAsDataURL(ficheiro);
+        });
+    }
+
+    // Remove a fotografia selecionada.
+    if (botaoRemoverFotografia) {
+        botaoRemoverFotografia.addEventListener('click', function () {
+            fotografiaInput.value = '';
+            limparPreVisualizacao();
+        });
+    }
+
+    function limparPreVisualizacao() {
+        if (imagemFotografia) {
+            imagemFotografia.removeAttribute('src');
+        }
+
+        if (preVisualizacao) {
+            preVisualizacao.hidden = true;
+        }
+    }
+
     if (!formulario || !mensagem || !tabela) {
         console.error('Elementos do formulário de ninhos não encontrados.');
         return;

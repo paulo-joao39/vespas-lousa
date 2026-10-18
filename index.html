@@ -248,17 +248,31 @@
             <legend>5. Fotografia e observações</legend>
 
             <label for="fotografia">Fotografia do ninho</label>
-            <input
-                type="file"
-                id="fotografia"
-                name="fotografia"
-                accept="image/*"
-                capture="environment"
+
+        <input
+            type="file"
+            id="fotografia"
+            name="fotografia"
+            accept="image/*"
+        >
+
+        <small>
+            Podes tirar uma fotografia com a câmara ou escolher uma imagem dos ficheiros.
+        </small>
+
+        <div id="pre-visualizacao-fotografia" hidden>
+            <p><strong>Pré-visualização da fotografia:</strong></p>
+
+            <img
+                id="imagem-fotografia"
+                alt="Pré-visualização da fotografia do ninho"
+                style="max-width: 300px; max-height: 300px; display: block;"
             >
 
-            <small>
-                A fotografia será associada ao registo neste navegador.
-            </small>
+            <button type="button" id="remover-fotografia" class="botao-secundario">
+                Remover fotografia
+            </button>
+        </div>
 
             <label for="observacoes">Observações</label>
             <textarea
