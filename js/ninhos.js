@@ -284,7 +284,9 @@ atualizarOutraUnidade();
             freguesia: dados.get('freguesia'),
             tipoNinho: dados.get('tipoNinho'),
             localizacao: dados.get('localizacao'),
-            tipoArvore: dados.get('tipoArvore'),
+            tipoArvore: dados.get('tipoArvore') === 'Outra'
+                ? dados.get('outraArvore').trim()
+                : dados.get('tipoArvore'),
             tipoEdificio: dados.get('tipoEdificio'),
             tipoTelhado: dados.get('tipoTelhado'),
             tipoPoste: dados.get('tipoPoste'),
