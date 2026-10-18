@@ -39,7 +39,7 @@ export function atualizarDashboard() {
     });
 
     contadorGPS.textContent =
-        `${georreferenciados.length} ocorrência(s) com coordenadas GPS`;
+    `${georreferenciados.length} ocorrência(s) registadas`;
 
     listaGPS.replaceChildren();
 
