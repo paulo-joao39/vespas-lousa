@@ -28,9 +28,7 @@ export function atualizarDashboard() {
     }
 
     // Mostrar apenas ninhos tratados com coordenadas GPS válidas.
-    const georreferenciados = ninhos.filter(ninho => {
-        if (ninho.estado !== 'Tratado') {
-            return false;
+   const georreferenciados = ninhos.filter(ninho => {
         }
 
         if (
