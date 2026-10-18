@@ -147,14 +147,35 @@
             </select>
 
             <div id="detalhe-arvore" hidden>
-                <label for="tipo-arvore">Espécie de árvore</label>
-                <input
-                    type="text"
-                    id="tipo-arvore"
-                    name="tipoArvore"
-                    placeholder="Indicar espécie"
-                >
-            </div>
+
+    <label for="tipo-arvore">Espécie de árvore</label>
+
+    <select id="tipo-arvore" name="tipoArvore">
+        <option value="">Selecionar espécie</option>
+        <option value="Eucalipto">Eucalipto</option>
+        <option value="Pinheiro">Pinheiro</option>
+        <option value="Sobreiro">Sobreiro</option>
+        <option value="Azinheira">Azinheira</option>
+        <option value="Carvalho">Carvalho</option>
+        <option value="Castanheiro">Castanheiro</option>
+        <option value="Oliveira">Oliveira</option>
+        <option value="Outra">Outra</option>
+    </select>
+
+    <div id="detalhe-outra-arvore" hidden>
+
+        <label for="outra-arvore">Indicar outra espécie</label>
+
+        <input
+            type="text"
+            id="outra-arvore"
+            name="outraArvore"
+            placeholder="Escreve o nome da espécie"
+        >
+
+    </div>
+
+    </div>
 
             <div id="detalhe-edificio" hidden>
                 <label for="tipo-edificio">Tipo de edifício</label>
