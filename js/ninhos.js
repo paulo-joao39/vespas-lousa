@@ -338,7 +338,10 @@ atualizarOutraUnidade();
         try {
             ninho.fotografia = fotografia;
 
-            adicionarNinho(ninho);
+            const ninhoGuardado = adicionarNinho(ninho);
+
+            campoReferencia.value = ninhoGuardado.referencia;
+            campoIdentificador.value = ninhoGuardado.identificador;
 
             atualizarTabela();
 
