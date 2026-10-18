@@ -40,25 +40,42 @@ export function iniciarFicha() {
     }
 
     function atualizarLista() {
-        const valorAnterior = seletor.value;
-        const ninhos = obterNinhos();
+    const valorAnterior = seletor.value;
+    const ninhos = obterNinhos();
 
-        seletor.replaceChildren();
+    seletor.replaceChildren();
 
-        const opcaoInicial = document.createElement('option');
-        opcaoInicial.value = '';
-        opcaoInicial.textContent = 'Selecionar um ninho';
-        seletor.appendChild(opcaoInicial);
+    const opcaoInicial = document.createElement('option');
+    opcaoInicial.value = '';
+    opcaoInicial.textContent = 'Selecionar um ninho';
+    seletor.appendChild(opcaoInicial);
 
-        ninhos.forEach((ninho, indice) => {
-            const opcao = document.createElement('option');
-            opcao.value = ninho.id;
-            opcao.textContent =
-                `${ninho.identificador || ninho.referencia || 'Sem número'} — ` +
-                `${ninho.freguesia || 'Freguesia não indicada'}`;
+    ninhos.forEach(ninho => {
+        if (!ninho.id) {
+            console.warn('Ninho sem identificador interno:', ninho);
+            return;
+        }
 
-            seletor.appendChild(opcao);
-        });
+        const opcao = document.createElement('option');
+        opcao.value = ninho.id;
+
+        const referencia =
+            ninho.identificador ||
+            ninho.referencia ||
+            'Sem número';
+
+        const freguesia = ninho.freguesia || 'Freguesia não indicada';
+
+        opcao.textContent = `${referencia} — ${freguesia}`;
+        seletor.appendChild(opcao);
+    });
+
+    if ([...seletor.options].some(opcao => opcao.value === valorAnterior)) {
+        seletor.value = valorAnterior;
+    }
+
+    mostrarFicha();
+}
 
         if ([...seletor.options].some(opcao => opcao.value === valorAnterior)) {
             seletor.value = valorAnterior;
