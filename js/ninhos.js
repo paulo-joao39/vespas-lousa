@@ -10,35 +10,61 @@ export function iniciarNinhos() {
     const seletorLocal = document.getElementById('localizacao');
     const botaoLimpar = document.getElementById('limpar-ninho');
 
-    const campoReferencia = document.getElementById('referencia');
-    const campoIdentificador = document.getElementById('identificador');
-    const campoData = document.getElementById('data');
+    // Mostra o próximo número de registo do mês atual.
+function atualizarProximoNumeroRegisto() {
+    const elemento = document.getElementById('proximo-numero-registo');
 
-    // Atualiza automaticamente a referência do ninho.
-    function atualizarIdentificacaoAutomatica() {
-        const dataSelecionada = campoData.value;
-
-        if (!dataSelecionada) {
-            campoReferencia.value = '';
-            campoIdentificador.value = '';
-            return;
-        }
-
-        const partes = dataSelecionada.split('-');
-        const anoMes = `${partes[0]}${partes[1]}`;
-
-        // Mostra o ano e o mês na referência.
-        campoReferencia.value = `${anoMes}-`;
-
-        // O número sequencial será atribuído ao guardar o ninho.
-        campoIdentificador.value = 'A atribuir automaticamente';
+    if (!elemento) {
+        return;
     }
 
-    // Atualiza a identificação quando a data é alterada.
-    campoData.addEventListener(
-        'change',
-        atualizarIdentificacaoAutomatica
+    const agora = new Date();
+    const anoMes = `${agora.getFullYear()}${String(
+        agora.getMonth() + 1
+    ).padStart(2, '0')}`;
+
+    const ninhos = obterNinhos();
+
+    const chaveContador = 'vespas_lousa_contador_ninhos';
+    let contadores = {};
+
+    try {
+        contadores = JSON.parse(
+            localStorage.getItem(chaveContador) || '{}'
+        );
+    } catch (erro) {
+        console.error('Erro ao consultar a numeração:', erro);
+    }
+
+    const maiorExistente = ninhos.reduce((maior, ninho) => {
+        const identificador = String(
+            ninho.identificador || ninho.referencia || ''
+        ).replace('-', '');
+
+        const correspondencia = identificador.match(
+            new RegExp(`^${anoMes}(\\d{4})$`)
+        );
+
+        if (!correspondencia) {
+            return maior;
+        }
+
+        return Math.max(maior, Number(correspondencia[1]));
+    }, 0);
+
+    const ultimoNumero = Math.max(
+        Number(contadores[anoMes]) || 0,
+        maiorExistente
     );
+
+    if (ultimoNumero >= 9999) {
+        elemento.textContent = 'Limite mensal atingido';
+        return;
+    }
+
+    elemento.textContent =
+        `${anoMes}${String(ultimoNumero + 1).padStart(4, '0')}`;
+}
 
     // O restante código da função iniciarNinhos() continua aqui.
 
@@ -338,12 +364,10 @@ atualizarOutraUnidade();
         try {
             ninho.fotografia = fotografia;
 
-            const ninhoGuardado = adicionarNinho(ninho);
-
-            campoReferencia.value = ninhoGuardado.referencia;
-            campoIdentificador.value = ninhoGuardado.identificador;
+            adicionarNinho(ninho);
 
             atualizarTabela();
+            atualizarProximoNumeroRegisto();
 
             document.dispatchEvent(
                 new CustomEvent('ninhos-atualizados')
@@ -366,4 +390,5 @@ atualizarOutraUnidade();
     // Preparação inicial.
     atualizarDetalhesLocal();
     atualizarTabela();
+    atualizarProximoNumeroRegisto();
 }

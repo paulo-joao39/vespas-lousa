@@ -35,16 +35,11 @@ function obterChave(tipo) {
 // ======================================================
 
 function gerarIdentificadorNinho(dataOcorrencia) {
-    if (!dataOcorrencia) {
-        throw new Error(
-            'É necessário indicar a data da ocorrência.'
-        );
-    }
-
-    const partes = dataOcorrencia.split('-');
+    const data = dataOcorrencia || new Date().toISOString().slice(0, 10);
+    const partes = data.split('-');
 
     if (partes.length !== 3) {
-        throw new Error('A data da ocorrência não é válida.');
+        throw new Error('A data utilizada para o registo não é válida.');
     }
 
     const anoMes = `${partes[0]}${partes[1]}`;
@@ -57,32 +52,26 @@ function gerarIdentificadorNinho(dataOcorrencia) {
             localStorage.getItem(chaveContador) || '{}'
         );
     } catch (erro) {
-        throw new Error(
-            'Não foi possível ler o contador dos ninhos.'
-        );
+        throw new Error('Não foi possível ler o contador dos ninhos.');
     }
 
     const ninhos = obterNinhos();
 
+    // Procura o maior número já utilizado neste ano e mês.
     const maiorExistente = ninhos.reduce((maior, ninho) => {
-        const identificador = ninho.identificador;
-
-        if (typeof identificador !== 'string') {
-            return maior;
-        }
+        const identificador = String(
+            ninho.identificador || ninho.referencia || ''
+        ).replace('-', '');
 
         const correspondencia = identificador.match(
-            new RegExp(`^${anoMes}-(\\d{4})$`)
+            new RegExp(`^${anoMes}(\\d{4})$`)
         );
 
         if (!correspondencia) {
             return maior;
         }
 
-        return Math.max(
-            maior,
-            Number(correspondencia[1])
-        );
+        return Math.max(maior, Number(correspondencia[1]));
     }, 0);
 
     const ultimoNumero = Math.max(
@@ -92,12 +81,13 @@ function gerarIdentificadorNinho(dataOcorrencia) {
 
     if (ultimoNumero >= 9999) {
         throw new Error(
-            'Já foram atribuídos 9999 identificadores para este mês.'
+            'Já foram utilizados os 9999 números disponíveis para este mês.'
         );
     }
 
     const proximoNumero = ultimoNumero + 1;
 
+    // Reserva o número para não o reutilizar após apagar um ninho.
     contadores[anoMes] = proximoNumero;
 
     localStorage.setItem(
@@ -105,7 +95,7 @@ function gerarIdentificadorNinho(dataOcorrencia) {
         JSON.stringify(contadores)
     );
 
-    return `${anoMes}-${String(proximoNumero).padStart(4, '0')}`;
+    return `${anoMes}${String(proximoNumero).padStart(4, '0')}`;
 }
 
 function lerRegistos(tipo) {
@@ -283,8 +273,9 @@ export function guardarNinhos(ninhos) {
 export function adicionarNinho(ninho) {
     const agora = new Date().toISOString();
 
-    const identificador = ninho.identificador ||
-        gerarIdentificadorNinho(ninho.data);
+    // Usa a data da ocorrência para determinar o ano e o mês.
+    // Se não houver data, utiliza a data atual.
+    const identificador = gerarIdentificadorNinho();
 
     const novoNinho = {
         ...ninho,
