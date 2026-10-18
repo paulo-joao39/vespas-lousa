@@ -39,38 +39,43 @@ export function iniciarFicha() {
         container.appendChild(paragrafo);
     }
 
-    function atualizarLista() {
-    const valorAnterior = seletor.value;
-    const ninhos = obterNinhos();
+        function atualizarLista() {
+        const valorAnterior = seletor.value;
+        const ninhos = obterNinhos();
 
-    seletor.replaceChildren();
+        console.log('Ficha: ninhos encontrados:', ninhos.length);
 
-    const opcaoInicial = document.createElement('option');
-    opcaoInicial.value = '';
-    opcaoInicial.textContent = 'Selecionar um ninho';
-    seletor.appendChild(opcaoInicial);
+        seletor.replaceChildren();
 
-    ninhos.forEach(ninho => {
-        if (!ninho.id) {
-            console.warn('Ninho sem identificador interno:', ninho);
-            return;
-        }
+        const opcaoInicial = document.createElement('option');
+        opcaoInicial.value = '';
+        opcaoInicial.textContent = 'Selecionar um ninho';
+        seletor.appendChild(opcaoInicial);
 
-        const opcao = document.createElement('option');
-        opcao.value = ninho.id;
+        ninhos.forEach(ninho => {
+            const opcao = document.createElement('option');
 
-        const referencia =
-            ninho.identificador ||
-            ninho.referencia ||
-            'Sem número';
+            opcao.value = ninho.id || '';
 
-        const freguesia = ninho.freguesia || 'Freguesia não indicada';
+            const referencia =
+                ninho.identificador ||
+                ninho.referencia ||
+                'Sem número';
 
-        opcao.textContent = `${referencia} — ${freguesia}`;
-        seletor.appendChild(opcao);
-    });
+            const freguesia =
+                ninho.freguesia ||
+                'Freguesia não indicada';
 
-        if ([...seletor.options].some(opcao => opcao.value === valorAnterior)) {
+            opcao.textContent = `${referencia} — ${freguesia}`;
+
+            seletor.appendChild(opcao);
+        });
+
+        if (
+            [...seletor.options].some(
+                opcao => opcao.value === valorAnterior
+            )
+        ) {
             seletor.value = valorAnterior;
         }
 
