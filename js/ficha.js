@@ -70,13 +70,6 @@ export function iniciarFicha() {
         seletor.appendChild(opcao);
     });
 
-    if ([...seletor.options].some(opcao => opcao.value === valorAnterior)) {
-        seletor.value = valorAnterior;
-    }
-
-    mostrarFicha();
-}
-
         if ([...seletor.options].some(opcao => opcao.value === valorAnterior)) {
             seletor.value = valorAnterior;
         }
