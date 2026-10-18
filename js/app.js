@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     iniciarNavegacao();
     iniciarNinhos();
     iniciarTratamentos();
-    atualizarDashboard();
+    iniciarFicha();
     atualizarDashboard();
 
     document.addEventListener('ninhos-atualizados', () => {
