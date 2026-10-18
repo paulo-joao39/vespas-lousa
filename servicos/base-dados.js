@@ -7,9 +7,9 @@
 const CHAVES = {
     ninhos: 'vespas_lousa_registos',
     tratamentos: 'vespas_lousa_tratamentos',
-    contactos: 'vespas_lousa_contactos'
+    contactos: 'vespas_lousa_contactos',
+    contadorNinhos: 'vespas_lousa_contador_ninhos'
 };
-
 
 // ======================================================
 // FUNÇÕES INTERNAS
@@ -27,6 +27,75 @@ function obterChave(tipo) {
     return chave;
 }
 
+// ======================================================
+// IDENTIFICADOR AUTOMÁTICO DOS NINHOS
+// Formato: DDMMAA-NNN
+// ======================================================
+
+function gerarIdentificadorNinho() {
+    const agora = new Date();
+
+    const dia = String(agora.getDate()).padStart(2, '0');
+    const mes = String(agora.getMonth() + 1).padStart(2, '0');
+    const ano = String(agora.getFullYear()).slice(-2);
+
+    const data = `${dia}${mes}${ano}`;
+    const chaveContador = CHAVES.contadorNinhos;
+
+    let contadores = {};
+
+    try {
+        contadores = JSON.parse(
+            localStorage.getItem(chaveContador) || '{}'
+        );
+    } catch (erro) {
+        throw new Error(
+            'Não foi possível ler o contador dos ninhos.'
+        );
+    }
+
+    const ninhos = obterNinhos();
+
+    const maiorExistente = ninhos.reduce((maior, ninho) => {
+        const identificador = ninho.identificador;
+
+        if (typeof identificador !== 'string') {
+            return maior;
+        }
+
+        const correspondencia = identificador.match(
+            new RegExp(`^${data}-(\\d{3})$`)
+        );
+
+        if (!correspondencia) {
+            return maior;
+        }
+
+        return Math.max(maior, Number(correspondencia[1]));
+    }, 0);
+
+    const ultimoNumero = Math.max(
+        Number(contadores[data]) || 0,
+        maiorExistente
+    );
+
+    if (ultimoNumero >= 999) {
+        throw new Error(
+            'Já foram atribuídos 999 identificadores para esta data.'
+        );
+    }
+
+    const proximoNumero = ultimoNumero + 1;
+
+    contadores[data] = proximoNumero;
+
+    localStorage.setItem(
+        chaveContador,
+        JSON.stringify(contadores)
+    );
+
+    return `${data}-${String(proximoNumero).padStart(3, '0')}`;
+}
 
 function lerRegistos(tipo) {
     const chave = obterChave(tipo);
