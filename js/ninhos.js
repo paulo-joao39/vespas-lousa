@@ -114,6 +114,31 @@ export function iniciarNinhos() {
         );
     }
 
+// Mostrar ou esconder o campo para indicar outra espécie de árvore.
+const campoTipoArvore = document.getElementById('tipo-arvore');
+const detalheOutraArvore = document.getElementById('detalhe-outra-arvore');
+const campoOutraArvore = document.getElementById('outra-arvore');
+
+function atualizarOutraArvore() {
+    if (!campoTipoArvore || !detalheOutraArvore || !campoOutraArvore) {
+        return;
+    }
+
+    const selecionouOutra = campoTipoArvore.value === 'Outra';
+
+    detalheOutraArvore.hidden = !selecionouOutra;
+    campoOutraArvore.required = selecionouOutra;
+
+    if (!selecionouOutra) {
+        campoOutraArvore.value = '';
+    }
+}
+
+if (campoTipoArvore) {
+    campoTipoArvore.addEventListener('change', atualizarOutraArvore);
+    atualizarOutraArvore();
+}
+
     // Mostra apenas os campos correspondentes ao local escolhido.
     function atualizarDetalhesLocal() {
     if (!seletorLocal) {
