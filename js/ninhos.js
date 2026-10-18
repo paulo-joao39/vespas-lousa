@@ -200,19 +200,19 @@ export function iniciarNinhos() {
 
     // Mostra o campo para indicar outra unidade responsável.
     const campoUnidade = document.getElementById('unidade');
-    const detalheOutraUnidade = document.getElementById('detalhe-outra-unidade');
-    const campoOutraUnidade = document.getElementById('outra-unidade');
+const detalheOutraUnidade = document.getElementById('detalhe-outra-unidade');
+const campoOutraUnidade = document.getElementById('outra-unidade');
 
-    function atualizarOutraUnidade() {
-        const selecionouOutra = campoUnidade.value === 'Outra';
+function atualizarOutraUnidade() {
+    const selecionouOutra = campoUnidade.value === 'Outra';
 
-        detalheOutraUnidade.hidden = !selecionouOutra;
-        campoOutraUnidade.required = selecionouOutra;
+    detalheOutraUnidade.hidden = !selecionouOutra;
+    campoOutraUnidade.required = selecionouOutra;
 
-        if (!selecionouOutra) {
-            campoOutraUnidade.value = '';
-        }
+    if (!selecionouOutra) {
+        campoOutraUnidade.value = '';
     }
+}
 
 campoUnidade.addEventListener('change', atualizarOutraUnidade);
 atualizarOutraUnidade();
