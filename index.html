@@ -62,59 +62,250 @@
         </section>
 
         <section id="ninhos" class="secao" hidden>
-            <h2>Registar novo ninho</h2>
 
-            <form id="form-ninho">
+    <h2>Registar novo ninho</h2>
 
-                <label for="referencia">Referência do ninho</label>
-                <input type="text" id="referencia" name="referencia" required>
+    <form id="form-ninho">
 
-                <label for="data">Data da ocorrência</label>
-                <input type="date" id="data" name="data" required>
+        <fieldset>
+            <legend>1. Identificação do registo</legend>
 
-                <label for="freguesia">Freguesia</label>
-                <input type="text" id="freguesia" name="freguesia" required>
+            <label for="referencia">Referência do ninho *</label>
+            <input type="text" id="referencia" name="referencia" required>
 
-                <label for="localizacao">Localização</label>
-                <input type="text" id="localizacao" name="localizacao">
+            <label for="data">Data da ocorrência *</label>
+            <input type="date" id="data" name="data" required>
 
-                <label for="estado">Estado</label>
-                <select id="estado" name="estado" required>
-                    <option value="Pendente">Por tratar</option>
-                    <option value="Tratado">Tratado</option>
+            <label for="unidade">Unidade responsável *</label>
+            <input type="text" id="unidade" name="unidade" required autocomplete="off">
+
+        </fieldset>
+
+        <fieldset>
+            <legend>2. Contacto e localização</legend>
+
+            <label for="contactante">Nome do contactante</label>
+            <input type="text" id="contactante" name="contactante">
+
+            <label for="telefone">Telefone</label>
+            <input type="tel" id="telefone" name="telefone">
+
+            <label for="morada">Morada / endereço</label>
+            <input type="text" id="morada" name="morada">
+
+            <label for="freguesia">Freguesia *</label>
+            <select id="freguesia" name="freguesia" required>
+                <option value="">Selecionar freguesia</option>
+                <option value="Gândaras">Gândaras</option>
+                <option value="Lousã">Lousã</option>
+                <option value="Vilarinho">Vilarinho</option>
+                <option value="Serpins">Serpins</option>
+                <option value="União de Freguesias de Foz de Arouce e Casal de Ermio">
+                    União de Freguesias de Foz de Arouce e Casal de Ermio
+                </option>
+            </select>
+
+        </fieldset>
+
+        <fieldset>
+            <legend>3. Caracterização do ninho</legend>
+
+            <label for="tipo-ninho">Tipo de ninho *</label>
+            <select id="tipo-ninho" name="tipoNinho" required>
+                <option value="">Selecionar tipo</option>
+                <option value="Primário">Primário</option>
+                <option value="Secundário">Secundário</option>
+            </select>
+
+            <label for="localizacao">Local do ninho *</label>
+            <select id="localizacao" name="localizacao" required>
+                <option value="">Selecionar local</option>
+                <option value="Árvore">Árvore</option>
+                <option value="Edifício">Edifício</option>
+                <option value="Telhado">Telhado</option>
+                <option value="Poste">Poste</option>
+                <option value="Muro">Muro</option>
+                <option value="Outros">Outros</option>
+            </select>
+
+            <div id="detalhe-arvore" hidden>
+                <label for="tipo-arvore">Espécie de árvore</label>
+                <input
+                    type="text"
+                    id="tipo-arvore"
+                    name="tipoArvore"
+                    placeholder="Indicar espécie"
+                >
+            </div>
+
+            <div id="detalhe-edificio" hidden>
+                <label for="tipo-edificio">Tipo de edifício</label>
+                <select id="tipo-edificio" name="tipoEdificio">
+                    <option value="">Selecionar tipo</option>
+                    <option value="Prédio">Prédio</option>
+                    <option value="Casa">Casa</option>
+                    <option value="Anexo">Anexo</option>
+                    <option value="Arrumos agrícolas">Arrumos agrícolas</option>
+                    <option value="Outro">Outro</option>
+                </select>
+            </div>
+
+            <div id="detalhe-telhado" hidden>
+                <label for="tipo-telhado">Local específico</label>
+                <select id="tipo-telhado" name="tipoTelhado">
+                    <option value="">Selecionar local</option>
+                    <option value="Sob o telhado">Sob o telhado</option>
+                    <option value="Sobre o telhado">Sobre o telhado</option>
+                    <option value="Chaminé">Chaminé</option>
+                    <option value="Beirado">Beirado</option>
+                    <option value="Barrotes">Barrotes</option>
+                    <option value="Interior">Interior</option>
+                    <option value="Exterior">Exterior</option>
+                    <option value="Outro">Outro</option>
+                </select>
+            </div>
+
+            <div id="detalhe-poste" hidden>
+                <label for="tipo-poste">Tipo de poste ou estrutura</label>
+                <select id="tipo-poste" name="tipoPoste">
+                    <option value="">Selecionar tipo</option>
+                    <option value="Poste público">Poste público</option>
+                    <option value="Poste privado">Poste privado</option>
+                    <option value="Alta tensão">Alta tensão</option>
+                    <option value="Antenas">Antenas</option>
                 </select>
 
-                <label for="observacoes">Observações</label>
-                <textarea id="observacoes" name="observacoes" rows="4"></textarea>
+                <label for="zona-poste">Tipo de área</label>
+                <select id="zona-poste" name="zonaPoste">
+                    <option value="">Selecionar área</option>
+                    <option value="Rural">Rural</option>
+                    <option value="Urbana">Urbana</option>
+                    <option value="Florestal">Florestal</option>
+                </select>
+            </div>
 
-                <button type="submit">Registar ninho</button>
+            <div id="detalhe-outros" hidden>
+                <label for="outro-local">Especificar o local</label>
+                <input
+                    type="text"
+                    id="outro-local"
+                    name="outroLocal"
+                    placeholder="Ex.: muro ou outra estrutura"
+                >
+            </div>
 
-            </form>
+        </fieldset>
 
-            <p id="mensagem-ninho" role="status"></p>
+        <fieldset>
+            <legend>4. Dimensões e posição</legend>
 
-        <hr>
+            <label for="cota">Cota — altura em relação ao chão (m)</label>
+            <input
+                type="number"
+                id="cota"
+                name="cota"
+                min="0"
+                step="0.1"
+            >
 
-        <h3>Ninhos registados</h3>
+            <label for="altura-ninho">Altura do ninho (cm)</label>
+            <input
+                type="number"
+                id="altura-ninho"
+                name="alturaNinho"
+                min="0"
+                step="0.1"
+            >
 
-        <div class="tabela-responsiva">
-            <table id="tabela-ninhos">
-                <thead>
-                    <tr>
-                        <th>Referência</th>
-                        <th>Data</th>
-                        <th>Freguesia</th>
-                        <th>Localização</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
+            <label for="largura-ninho">Largura do ninho (cm)</label>
+            <input
+                type="number"
+                id="largura-ninho"
+                name="larguraNinho"
+                min="0"
+                step="0.1"
+            >
 
-                <tbody id="lista-ninhos">
-                </tbody>
-            </table>
-        </div>
+            <label for="latitude">Latitude GPS</label>
+            <input
+                type="number"
+                id="latitude"
+                name="latitude"
+                step="0.000001"
+            >
 
-        </section>
+            <label for="longitude">Longitude GPS</label>
+            <input
+                type="number"
+                id="longitude"
+                name="longitude"
+                step="0.000001"
+            >
+
+        </fieldset>
+
+        <fieldset>
+            <legend>5. Fotografia e observações</legend>
+
+            <label for="fotografia">Fotografia do ninho</label>
+            <input
+                type="file"
+                id="fotografia"
+                name="fotografia"
+                accept="image/*"
+                capture="environment"
+            >
+
+            <small>
+                A fotografia será associada ao registo neste navegador.
+            </small>
+
+            <label for="observacoes">Observações</label>
+            <textarea
+                id="observacoes"
+                name="observacoes"
+                rows="4"
+            ></textarea>
+
+        </fieldset>
+
+        <input type="hidden" id="estado" name="estado" value="Pendente">
+
+        <button type="submit">Registar ninho</button>
+
+        <button
+            type="button"
+            id="limpar-ninho"
+            class="botao-secundario"
+        >
+            Limpar campos
+        </button>
+
+    </form>
+
+    <p id="mensagem-ninho" role="status" aria-live="polite"></p>
+
+    <h3>Ninhos registados</h3>
+
+    <div class="tabela-responsiva">
+        <table id="tabela-ninhos">
+            <thead>
+                <tr>
+                    <th>Referência</th>
+                    <th>Data</th>
+                    <th>Freguesia</th>
+                    <th>Local</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody id="lista-ninhos"></tbody>
+        </table>
+    </div>
+
+    </section>
 
         <section id="tratamentos" class="secao" hidden>
 

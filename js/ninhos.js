@@ -6,102 +6,194 @@ import {
 export function iniciarNinhos() {
     const formulario = document.getElementById('form-ninho');
     const mensagem = document.getElementById('mensagem-ninho');
-    const listaNinhos = document.getElementById('lista-ninhos');
+    const tabela = document.getElementById('lista-ninhos');
+    const seletorLocal = document.getElementById('localizacao');
+    const botaoLimpar = document.getElementById('limpar-ninho');
 
-    if (!formulario) {
-        console.error('O formulário de ninhos não foi encontrado.');
+    if (!formulario || !mensagem || !tabela) {
+        console.error('Elementos do formulário de ninhos não encontrados.');
         return;
     }
 
-    // Apresentar os ninhos guardados na tabela
-    function atualizarTabela() {
-        if (!listaNinhos) {
-            return;
-        }
+    // Mostra apenas os campos correspondentes ao local escolhido.
+    function atualizarDetalhesLocal() {
+        const local = seletorLocal.value;
 
+        const detalhes = {
+            'Árvore': 'detalhe-arvore',
+            'Edifício': 'detalhe-edificio',
+            'Telhado': 'detalhe-telhado',
+            'Poste': 'detalhe-poste',
+            'Muro': 'detalhe-outros',
+            'Outros': 'detalhe-outros'
+        };
+
+        Object.values(detalhes).forEach(id => {
+            document.getElementById(id).hidden = true;
+        });
+
+        if (detalhes[local]) {
+            document.getElementById(detalhes[local]).hidden = false;
+        }
+    }
+
+    // Limpa os campos e repõe o estado inicial do formulário.
+    function limparFormulario() {
+        formulario.reset();
+        atualizarDetalhesLocal();
+
+        mensagem.textContent = '';
+        mensagem.style.color = '';
+
+        // Limpa também eventuais fotografias selecionadas.
+        const fotografia = document.getElementById('fotografia');
+        if (fotografia) fotografia.value = '';
+    }
+
+    // Atualiza a tabela com os ninhos guardados.
+    function atualizarTabela() {
         const ninhos = obterNinhos();
 
-        listaNinhos.replaceChildren();
+        tabela.replaceChildren();
 
-        ninhos.forEach((ninho) => {
+        ninhos.forEach(ninho => {
             const linha = document.createElement('tr');
 
             const valores = [
                 ninho.referencia,
                 ninho.data,
                 ninho.freguesia,
-                ninho.localizacao || '—',
+                ninho.localizacao,
+                ninho.tipoNinho || '',
                 ninho.estado
             ];
 
-            valores.forEach((valor) => {
+            valores.forEach(valor => {
                 const celula = document.createElement('td');
-                celula.textContent = valor || '—';
+                celula.textContent = valor || '';
                 linha.appendChild(celula);
             });
 
-            listaNinhos.appendChild(linha);
+            const celulaAcoes = document.createElement('td');
+            celulaAcoes.textContent = '—';
+            linha.appendChild(celulaAcoes);
+
+            tabela.appendChild(linha);
         });
     }
 
-    // Registar um novo ninho
+    // Atualiza os campos quando se muda o local do ninho.
+    seletorLocal.addEventListener('change', atualizarDetalhesLocal);
+
+    // Botão para começar um registo novo.
+    if (botaoLimpar) {
+        botaoLimpar.addEventListener('click', limparFormulario);
+    }
+
+    // Guarda o novo ninho.
     formulario.addEventListener('submit', function (evento) {
         evento.preventDefault();
 
-        const dadosFormulario = new FormData(formulario);
+        const dados = new FormData(formulario);
 
-        const ninho = {
-            referencia: dadosFormulario.get('referencia').trim(),
-            data: dadosFormulario.get('data'),
-            freguesia: dadosFormulario.get('freguesia').trim(),
-            localizacao: dadosFormulario.get('localizacao').trim(),
-            estado: dadosFormulario.get('estado'),
-            observacoes: dadosFormulario.get('observacoes').trim()
-        };
+        const referencia = dados.get('referencia').trim();
 
-        if (!ninho.referencia || !ninho.data || !ninho.freguesia) {
-            mensagem.textContent =
-                'Preenche todos os campos obrigatórios.';
+        if (!referencia) {
+            mensagem.textContent = 'Introduz a referência do ninho.';
             mensagem.style.color = '#c53030';
             return;
         }
 
-        const existentes = obterNinhos();
+        const ninhosExistentes = obterNinhos();
 
-        const referenciaDuplicada = existentes.some(
-            registo =>
-                registo.referencia.toLowerCase() ===
-                ninho.referencia.toLowerCase()
+        const duplicado = ninhosExistentes.some(
+            ninho =>
+                ninho.referencia.toLowerCase() === referencia.toLowerCase()
         );
 
-        if (referenciaDuplicada) {
+        if (duplicado) {
             mensagem.textContent =
                 'Já existe um ninho com esta referência.';
             mensagem.style.color = '#c53030';
             return;
         }
 
+        const fotografiaInput = document.getElementById('fotografia');
+        const ficheiroFotografia =
+            fotografiaInput.files && fotografiaInput.files[0];
+
+        const ninho = {
+            referencia,
+            data: dados.get('data'),
+            unidade: dados.get('unidade').trim(),
+            contactante: dados.get('contactante').trim(),
+            telefone: dados.get('telefone').trim(),
+            morada: dados.get('morada').trim(),
+            freguesia: dados.get('freguesia'),
+            tipoNinho: dados.get('tipoNinho'),
+            localizacao: dados.get('localizacao'),
+            tipoArvore: dados.get('tipoArvore'),
+            tipoEdificio: dados.get('tipoEdificio'),
+            tipoTelhado: dados.get('tipoTelhado'),
+            tipoPoste: dados.get('tipoPoste'),
+            zonaPoste: dados.get('zonaPoste'),
+            outroLocal: dados.get('outroLocal'),
+            cota: dados.get('cota'),
+            alturaNinho: dados.get('alturaNinho'),
+            larguraNinho: dados.get('larguraNinho'),
+            latitude: dados.get('latitude'),
+            longitude: dados.get('longitude'),
+            observacoes: dados.get('observacoes').trim(),
+            estado: 'Pendente'
+        };
+
+        // Guarda primeiro o registo e depois a fotografia, se existir.
+        if (ficheiroFotografia) {
+            const leitor = new FileReader();
+
+            leitor.onload = function () {
+                guardarNinhoComFotografia(ninho, leitor.result);
+            };
+
+            leitor.onerror = function () {
+                mensagem.textContent =
+                    'Não foi possível ler a fotografia.';
+                mensagem.style.color = '#c53030';
+            };
+
+            leitor.readAsDataURL(ficheiroFotografia);
+        } else {
+            guardarNinhoComFotografia(ninho, null);
+        }
+    });
+
+    function guardarNinhoComFotografia(ninho, fotografia) {
         try {
+            ninho.fotografia = fotografia;
+
             adicionarNinho(ninho);
 
-            mensagem.textContent =
-                'Ninho registado com sucesso!';
-            mensagem.style.color = '#276749';
-
-            formulario.reset();
-
-            // Atualizar a tabela após o registo
             atualizarTabela();
+
+            document.dispatchEvent(
+                new CustomEvent('ninhos-atualizados')
+            );
+
+            limparFormulario();
+
+            mensagem.textContent = 'Ninho registado com sucesso!';
+            mensagem.style.color = '#276749';
 
         } catch (erro) {
             console.error('Erro ao guardar o ninho:', erro);
 
             mensagem.textContent =
-                'Não foi possível guardar o ninho.';
+                'Não foi possível guardar o ninho. Verifica o espaço de armazenamento.';
             mensagem.style.color = '#c53030';
         }
-    });
+    }
 
-    // Carregar os registos existentes ao abrir a secção
+    // Preparação inicial.
+    atualizarDetalhesLocal();
     atualizarTabela();
 }
