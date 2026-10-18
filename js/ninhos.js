@@ -116,25 +116,37 @@ export function iniciarNinhos() {
 
     // Mostra apenas os campos correspondentes ao local escolhido.
     function atualizarDetalhesLocal() {
-        const local = seletorLocal.value;
+    if (!seletorLocal) {
+        return;
+    }
 
-        const detalhes = {
-            'Árvore': 'detalhe-arvore',
-            'Edifício': 'detalhe-edificio',
-            'Telhado': 'detalhe-telhado',
-            'Poste': 'detalhe-poste',
-            'Muro': 'detalhe-outros',
-            'Outros': 'detalhe-outros'
-        };
+    const local = seletorLocal.value;
 
-        Object.values(detalhes).forEach(id => {
-            document.getElementById(id).hidden = true;
-        });
+    const detalhes = {
+        'Árvore': 'detalhe-arvore',
+        'Edifício': 'detalhe-edificio',
+        'Telhado': 'detalhe-telhado',
+        'Poste': 'detalhe-poste',
+        'Muro': 'detalhe-outros',
+        'Outros': 'detalhe-outros'
+    };
 
-                if (detalhes[local]) {
-            document.getElementById(detalhes[local]).hidden = false;
+    Object.values(detalhes).forEach(id => {
+        const elemento = document.getElementById(id);
+
+        if (elemento) {
+            elemento.hidden = true;
+        }
+    });
+
+    if (detalhes[local]) {
+        const elemento = document.getElementById(detalhes[local]);
+
+        if (elemento) {
+            elemento.hidden = false;
         }
     }
+}
 
     // Limpa os campos e repõe o estado inicial do formulário.
     function limparFormulario() {
