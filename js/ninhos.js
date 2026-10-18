@@ -10,48 +10,92 @@ export function iniciarNinhos() {
     const seletorLocal = document.getElementById('localizacao');
     const botaoLimpar = document.getElementById('limpar-ninho');
 
-    // Elementos da fotografia.
+        // Elementos da fotografia.
     const fotografiaInput = document.getElementById('fotografia');
+    const fotografiaCamera = document.getElementById('fotografia-camera');
     const preVisualizacao = document.getElementById('pre-visualizacao-fotografia');
     const imagemFotografia = document.getElementById('imagem-fotografia');
     const botaoRemoverFotografia = document.getElementById('remover-fotografia');
 
-    // Mostra a fotografia selecionada.
+    // Fotografia selecionada para o registo.
+    let ficheiroFotografiaSelecionado = null;
+
+    // Mostra a pré-visualização da fotografia.
+    function mostrarFotografia(ficheiro) {
+        if (!ficheiro) {
+            limparPreVisualizacao();
+            return;
+        }
+
+        if (!ficheiro.type.startsWith('image/')) {
+            alert('Seleciona um ficheiro de imagem válido.');
+            limparFotografiaSelecionada();
+            return;
+        }
+
+        ficheiroFotografiaSelecionado = ficheiro;
+
+        const leitor = new FileReader();
+
+        leitor.onload = function () {
+            imagemFotografia.src = leitor.result;
+            preVisualizacao.hidden = false;
+        };
+
+        leitor.onerror = function () {
+            alert('Não foi possível abrir a fotografia.');
+            limparFotografiaSelecionada();
+        };
+
+        leitor.readAsDataURL(ficheiro);
+    }
+
+    // Escolher uma fotografia dos ficheiros.
     if (fotografiaInput) {
         fotografiaInput.addEventListener('change', function () {
             const ficheiro = fotografiaInput.files[0];
 
-            if (!ficheiro) {
-                limparPreVisualizacao();
-                return;
+            if (ficheiro) {
+                if (fotografiaCamera) {
+                    fotografiaCamera.value = '';
+                }
+
+                mostrarFotografia(ficheiro);
             }
-
-            if (!ficheiro.type.startsWith('image/')) {
-                alert('Seleciona um ficheiro de imagem válido.');
-                fotografiaInput.value = '';
-                limparPreVisualizacao();
-                return;
-            }
-
-            const leitor = new FileReader();
-
-            leitor.onload = function () {
-                imagemFotografia.src = leitor.result;
-                preVisualizacao.hidden = false;
-            };
-
-            leitor.readAsDataURL(ficheiro);
         });
     }
 
-    // Remove a fotografia selecionada.
-    if (botaoRemoverFotografia) {
-        botaoRemoverFotografia.addEventListener('click', function () {
+    // Tirar uma fotografia com a câmara do equipamento.
+    if (fotografiaCamera) {
+        fotografiaCamera.addEventListener('change', function () {
+            const ficheiro = fotografiaCamera.files[0];
+
+            if (ficheiro) {
+                if (fotografiaInput) {
+                    fotografiaInput.value = '';
+                }
+
+                mostrarFotografia(ficheiro);
+            }
+        });
+    }
+
+    // Limpa a fotografia selecionada.
+    function limparFotografiaSelecionada() {
+        ficheiroFotografiaSelecionado = null;
+
+        if (fotografiaInput) {
             fotografiaInput.value = '';
-            limparPreVisualizacao();
-        });
+        }
+
+        if (fotografiaCamera) {
+            fotografiaCamera.value = '';
+        }
+
+        limparPreVisualizacao();
     }
 
+    // Remove a pré-visualização.
     function limparPreVisualizacao() {
         if (imagemFotografia) {
             imagemFotografia.removeAttribute('src');
@@ -62,9 +106,12 @@ export function iniciarNinhos() {
         }
     }
 
-    if (!formulario || !mensagem || !tabela) {
-        console.error('Elementos do formulário de ninhos não encontrados.');
-        return;
+    // Botão para remover a fotografia.
+    if (botaoRemoverFotografia) {
+        botaoRemoverFotografia.addEventListener(
+            'click',
+            limparFotografiaSelecionada
+        );
     }
 
     // Mostra apenas os campos correspondentes ao local escolhido.
@@ -87,15 +134,10 @@ export function iniciarNinhos() {
         if (detalhes[local]) {
             document.getElementById(detalhes[local]).hidden = false;
         }
-    }
+        }
 
-    // Limpa os campos e repõe o estado inicial do formulário.
-    function limparFormulario() {
-        formulario.reset();
-        atualizarDetalhesLocal();
-
-        mensagem.textContent = '';
-        mensagem.style.color = '';
+        // Limpa também as fotografias selecionadas.
+        limparFotografiaSelecionada();
 
         // Limpa também eventuais fotografias selecionadas.
         const fotografia = document.getElementById('fotografia');
@@ -170,9 +212,7 @@ export function iniciarNinhos() {
             return;
         }
 
-        const fotografiaInput = document.getElementById('fotografia');
-        const ficheiroFotografia =
-            fotografiaInput.files && fotografiaInput.files[0];
+        const ficheiroFotografia = ficheiroFotografiaSelecionado;
 
         const ninho = {
             referencia,
