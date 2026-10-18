@@ -1,4 +1,8 @@
-import { obterNinhos } from '../servicos/base-dados.js';
+import {
+    obterNinhos,
+    guardarNinhos,
+    eliminarNinho
+} from '../servicos/base-dados.js';
 
 const CHAVE_TRATAMENTOS = 'vespas_lousa_tratamentos';
 
@@ -197,15 +201,29 @@ export function iniciarFicha() {
             });
         }
 
-        const botoes = document.createElement('div');
+                const botoes = document.createElement('div');
         botoes.style.marginTop = '20px';
+        botoes.style.display = 'flex';
+        botoes.style.flexWrap = 'wrap';
+        botoes.style.gap = '10px';
+
+        const botaoEditar = document.createElement('button');
+        botaoEditar.type = 'button';
+        botaoEditar.textContent = '✏️ EDITAR NINHO';
 
         const botaoImprimir = document.createElement('button');
         botaoImprimir.type = 'button';
-        botaoImprimir.textContent = 'Imprimir ficha / Guardar em PDF';
+        botaoImprimir.textContent = '🖨️ IMPRIMIR / PDF';
         botaoImprimir.addEventListener('click', () => window.print());
 
+        const botaoEliminar = document.createElement('button');
+        botaoEliminar.type = 'button';
+        botaoEliminar.textContent = '🗑️ ELIMINAR NINHO';
+
+        botoes.appendChild(botaoEditar);
         botoes.appendChild(botaoImprimir);
+        botoes.appendChild(botaoEliminar);
+
         conteudo.appendChild(botoes);
     }
 
