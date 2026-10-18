@@ -131,18 +131,20 @@ export function iniciarNinhos() {
             document.getElementById(id).hidden = true;
         });
 
-        if (detalhes[local]) {
+                if (detalhes[local]) {
             document.getElementById(detalhes[local]).hidden = false;
         }
-        }
+    }
 
-        // Limpa também as fotografias selecionadas.
+    // Limpa os campos e repõe o estado inicial do formulário.
+    function limparFormulario() {
+        formulario.reset();
+        atualizarDetalhesLocal();
         limparFotografiaSelecionada();
 
-        // Limpa também eventuais fotografias selecionadas.
-        const fotografia = document.getElementById('fotografia');
-        if (fotografia) fotografia.value = '';
-    }
+        mensagem.textContent = '';
+        mensagem.style.color = '';
+        }
 
     // Atualiza a tabela com os ninhos guardados.
     function atualizarTabela() {
