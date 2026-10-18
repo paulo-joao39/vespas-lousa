@@ -10,7 +10,39 @@ export function iniciarNinhos() {
     const seletorLocal = document.getElementById('localizacao');
     const botaoLimpar = document.getElementById('limpar-ninho');
 
-        // Elementos da fotografia.
+    const campoReferencia = document.getElementById('referencia');
+    const campoIdentificador = document.getElementById('identificador');
+    const campoData = document.getElementById('data');
+
+    // Atualiza automaticamente a referência do ninho.
+    function atualizarIdentificacaoAutomatica() {
+        const dataSelecionada = campoData.value;
+
+        if (!dataSelecionada) {
+            campoReferencia.value = '';
+            campoIdentificador.value = '';
+            return;
+        }
+
+        const partes = dataSelecionada.split('-');
+        const anoMes = `${partes[0]}${partes[1]}`;
+
+        // Mostra o ano e o mês na referência.
+        campoReferencia.value = `${anoMes}-`;
+
+        // O número sequencial será atribuído ao guardar o ninho.
+        campoIdentificador.value = 'A atribuir automaticamente';
+    }
+
+    // Atualiza a identificação quando a data é alterada.
+    campoData.addEventListener(
+        'change',
+        atualizarIdentificacaoAutomatica
+    );
+
+    // O restante código da função iniciarNinhos() continua aqui.
+
+    // Elementos da fotografia.
     const fotografiaInput = document.getElementById('fotografia');
     const fotografiaCamera = document.getElementById('fotografia-camera');
     const preVisualizacao = document.getElementById('pre-visualizacao-fotografia');
@@ -248,32 +280,13 @@ atualizarOutraUnidade();
 
         const dados = new FormData(formulario);
 
-        const referencia = dados.get('referencia').trim();
-
-        if (!referencia) {
-            mensagem.textContent = 'Introduz a referência do ninho.';
-            mensagem.style.color = '#c53030';
-            return;
-        }
-
-        const ninhosExistentes = obterNinhos();
-
-        const duplicado = ninhosExistentes.some(
-            ninho =>
-                ninho.referencia.toLowerCase() === referencia.toLowerCase()
-        );
-
-        if (duplicado) {
-            mensagem.textContent =
-                'Já existe um ninho com esta referência.';
-            mensagem.style.color = '#c53030';
-            return;
-        }
+        
 
         const ficheiroFotografia = ficheiroFotografiaSelecionado;
 
         const ninho = {
-            referencia,
+            referencia: '',
+            identificador: '',
             data: dados.get('data'),
             unidade: dados.get('unidade') === 'Outra'
                 ? dados.get('outraUnidade').trim()

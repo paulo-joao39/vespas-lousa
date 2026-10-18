@@ -29,17 +29,25 @@ function obterChave(tipo) {
 
 // ======================================================
 // IDENTIFICADOR AUTOMÁTICO DOS NINHOS
-// Formato: DDMMAA-NNN
+// Formato: AAAAMM-XXXX
+// Exemplo: 202610-0001
+// A sequência reinicia a cada mês.
 // ======================================================
 
-function gerarIdentificadorNinho() {
-    const agora = new Date();
+function gerarIdentificadorNinho(dataOcorrencia) {
+    if (!dataOcorrencia) {
+        throw new Error(
+            'É necessário indicar a data da ocorrência.'
+        );
+    }
 
-    const dia = String(agora.getDate()).padStart(2, '0');
-    const mes = String(agora.getMonth() + 1).padStart(2, '0');
-    const ano = String(agora.getFullYear()).slice(-2);
+    const partes = dataOcorrencia.split('-');
 
-    const data = `${dia}${mes}${ano}`;
+    if (partes.length !== 3) {
+        throw new Error('A data da ocorrência não é válida.');
+    }
+
+    const anoMes = `${partes[0]}${partes[1]}`;
     const chaveContador = CHAVES.contadorNinhos;
 
     let contadores = {};
@@ -64,37 +72,40 @@ function gerarIdentificadorNinho() {
         }
 
         const correspondencia = identificador.match(
-            new RegExp(`^${data}-(\\d{3})$`)
+            new RegExp(`^${anoMes}-(\\d{4})$`)
         );
 
         if (!correspondencia) {
             return maior;
         }
 
-        return Math.max(maior, Number(correspondencia[1]));
+        return Math.max(
+            maior,
+            Number(correspondencia[1])
+        );
     }, 0);
 
     const ultimoNumero = Math.max(
-        Number(contadores[data]) || 0,
+        Number(contadores[anoMes]) || 0,
         maiorExistente
     );
 
-    if (ultimoNumero >= 999) {
+    if (ultimoNumero >= 9999) {
         throw new Error(
-            'Já foram atribuídos 999 identificadores para esta data.'
+            'Já foram atribuídos 9999 identificadores para este mês.'
         );
     }
 
     const proximoNumero = ultimoNumero + 1;
 
-    contadores[data] = proximoNumero;
+    contadores[anoMes] = proximoNumero;
 
     localStorage.setItem(
         chaveContador,
         JSON.stringify(contadores)
     );
 
-    return `${data}-${String(proximoNumero).padStart(3, '0')}`;
+    return `${anoMes}-${String(proximoNumero).padStart(4, '0')}`;
 }
 
 function lerRegistos(tipo) {
@@ -272,21 +283,23 @@ export function guardarNinhos(ninhos) {
 export function adicionarNinho(ninho) {
     const agora = new Date().toISOString();
 
+    const identificador = ninho.identificador ||
+        gerarIdentificadorNinho(ninho.data);
+
     const novoNinho = {
         ...ninho,
         id: ninho.id || crypto.randomUUID(),
-        identificador: ninho.identificador || gerarIdentificadorNinho(),
+        identificador,
+        referencia: identificador,
         criadoEm: ninho.criadoEm || agora,
         atualizadoEm: agora
     };
 
     const ninhos = obterNinhos();
-
     ninhos.push(novoNinho);
-
     guardarNinhos(ninhos);
 
-    return ninhos;
+    return novoNinho;
 }
 
 
