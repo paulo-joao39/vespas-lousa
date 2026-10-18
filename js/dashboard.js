@@ -25,26 +25,7 @@ export function atualizarDashboard() {
     if (!contadorGPS || !listaGPS) return;
 
     // Selecionar todas as ocorrências com coordenadas GPS válidas.
-    const georreferenciados = ninhos.filter(ninho => {
-        if (
-            ninho.latitude === '' ||
-            ninho.longitude === '' ||
-            ninho.latitude == null ||
-            ninho.longitude == null
-        ) {
-            return false;
-        }
-
-        const latitude = Number(ninho.latitude);
-        const longitude = Number(ninho.longitude);
-
-        return Number.isFinite(latitude) &&
-            Number.isFinite(longitude) &&
-            latitude >= -90 &&
-            latitude <= 90 &&
-            longitude >= -180 &&
-            longitude <= 180;
-    });
+  const georreferenciados = [...ninhos];
 
     // Por tratar primeiro, tratadas depois.
     georreferenciados.sort((a, b) => {
