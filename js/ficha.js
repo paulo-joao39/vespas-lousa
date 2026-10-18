@@ -208,6 +208,9 @@ export function iniciarFicha() {
         botoes.style.gap = '10px';
 
         const botaoEditar = document.createElement('button');
+        botaoEditar.addEventListener('click', () => {
+            editarNinho(ninho, conteudo, seletor, mostrarFicha, atualizarLista);
+        });
         botaoEditar.type = 'button';
         botaoEditar.textContent = '✏️ EDITAR NINHO';
 
@@ -219,6 +222,39 @@ export function iniciarFicha() {
         const botaoEliminar = document.createElement('button');
         botaoEliminar.type = 'button';
         botaoEliminar.textContent = '🗑️ ELIMINAR NINHO';
+        botaoEliminar.addEventListener('click', () => {
+            const confirmar = window.confirm(
+                `Tens a certeza de que queres eliminar o ninho ${ninho.identificador || ninho.referencia || ''}? Esta ação não pode ser anulada.`
+            );
+
+            if (!confirmar) {
+                return;
+            }
+
+            try {
+                eliminarNinho(ninho.id);
+
+                const tratamentosAtualizados = obterTratamentos().filter(
+                    tratamento => tratamento.ninhoId !== ninho.id
+                );
+
+                localStorage.setItem(
+                    CHAVE_TRATAMENTOS,
+                    JSON.stringify(tratamentosAtualizados)
+                );
+
+                document.dispatchEvent(
+                    new CustomEvent('ninhos-atualizados')
+                );
+
+                atualizarLista();
+
+                alert('Ninho eliminado com sucesso.');
+            } catch (erro) {
+                console.error('Erro ao eliminar o ninho:', erro);
+                alert('Não foi possível eliminar o ninho.');
+            }
+        });
 
         botoes.appendChild(botaoEditar);
         botoes.appendChild(botaoImprimir);
@@ -232,5 +268,117 @@ export function iniciarFicha() {
     atualizarLista();
 
     document.addEventListener('ninhos-atualizados', atualizarLista);
+}
+
+function editarNinho(ninho) {
+    const campos = [
+        ['data', 'Data da ocorrência'],
+        ['unidade', 'Unidade responsável'],
+        ['contactante', 'Contactante'],
+        ['telefone', 'Telefone'],
+        ['morada', 'Morada'],
+        ['freguesia', 'Freguesia'],
+        ['tipoNinho', 'Tipo de ninho'],
+        ['localizacao', 'Localização'],
+        ['tipoArvore', 'Tipo de árvore'],
+        ['tipoEdificio', 'Tipo de edifício'],
+        ['tipoTelhado', 'Tipo de telhado'],
+        ['tipoPoste', 'Tipo de poste'],
+        ['zonaPoste', 'Zona do poste'],
+        ['outroLocal', 'Outro local'],
+        ['cota', 'Cota (m)'],
+        ['alturaNinho', 'Altura do ninho (cm)'],
+        ['larguraNinho', 'Largura do ninho (cm)'],
+        ['latitude', 'Latitude'],
+        ['longitude', 'Longitude'],
+        ['estado', 'Estado'],
+        ['observacoes', 'Observações']
+    ];
+
+    const formulario = document.createElement('form');
+    formulario.style.marginTop = '20px';
+
+    const titulo = document.createElement('h3');
+    titulo.textContent = 'Editar dados do ninho';
+    formulario.appendChild(titulo);
+
+    campos.forEach(([chave, rotulo]) => {
+        const etiqueta = document.createElement('label');
+        etiqueta.textContent = rotulo;
+        etiqueta.style.display = 'block';
+        etiqueta.style.marginTop = '10px';
+
+        let campo;
+
+        if (chave === 'observacoes') {
+            campo = document.createElement('textarea');
+            campo.rows = 4;
+        } else {
+            campo = document.createElement('input');
+            campo.type = 'text';
+        }
+
+        campo.name = chave;
+        campo.value = ninho[chave] ?? '';
+        campo.style.display = 'block';
+        campo.style.width = '100%';
+
+        etiqueta.appendChild(campo);
+        formulario.appendChild(etiqueta);
+    });
+
+    const guardar = document.createElement('button');
+    guardar.type = 'submit';
+    guardar.textContent = 'Guardar alterações';
+    guardar.style.marginTop = '15px';
+
+    const cancelar = document.createElement('button');
+    cancelar.type = 'button';
+    cancelar.textContent = 'Cancelar';
+    cancelar.style.marginLeft = '10px';
+    cancelar.addEventListener('click', () => mostrarFicha());
+
+    formulario.append(guardar, cancelar);
+
+    conteudo.appendChild(formulario);
+
+    formulario.addEventListener('submit', evento => {
+        evento.preventDefault();
+
+        const alteracoes = {};
+
+        campos.forEach(([chave]) => {
+            alteracoes[chave] = formulario.elements[chave].value.trim();
+        });
+
+        try {
+            const ninhos = obterNinhos();
+            const indice = ninhos.findIndex(item => item.id === ninho.id);
+
+            if (indice === -1) {
+                alert('Não foi possível encontrar este ninho.');
+                return;
+            }
+
+            ninhos[indice] = {
+                ...ninhos[indice],
+                ...alteracoes
+            };
+
+            guardarNinhos(ninhos);
+
+            document.dispatchEvent(
+                new CustomEvent('ninhos-atualizados')
+            );
+
+            alert('Ninho atualizado com sucesso!');
+            atualizarLista();
+            seletor.value = ninho.id;
+            mostrarFicha();
+        } catch (erro) {
+            console.error('Erro ao guardar o ninho:', erro);
+            alert('Não foi possível guardar as alterações.');
+        }
+    });
 }
 
