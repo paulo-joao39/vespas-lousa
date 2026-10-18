@@ -4,6 +4,8 @@ import {
     eliminarNinho
 } from '../servicos/base-dados.js';
 
+import { iniciarEdicaoNinho } from './ninhos.js';
+
 const CHAVE_TRATAMENTOS = 'vespas_lousa_tratamentos';
 
 function obterTratamentos() {
@@ -207,10 +209,12 @@ export function iniciarFicha() {
         botoes.style.flexWrap = 'wrap';
         botoes.style.gap = '10px';
 
-        const botaoEditar = document.createElement('button');
+       const botaoEditar = document.createElement('button');
+
         botaoEditar.addEventListener('click', () => {
-            editarNinho(ninho, conteudo, seletor, mostrarFicha, atualizarLista);
+            iniciarEdicaoNinho(ninho.id);
         });
+
         botaoEditar.type = 'button';
         botaoEditar.textContent = '✏️ EDITAR NINHO';
 

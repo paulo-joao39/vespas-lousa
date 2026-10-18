@@ -1,10 +1,27 @@
 import {
     obterNinhos,
-    adicionarNinho
+    adicionarNinho,
+    atualizarRegisto
 } from '../servicos/base-dados.js';
 
+let abrirFormularioEdicao = null;
+
+export function iniciarEdicaoNinho(id) {
+    if (abrirFormularioEdicao) {
+        abrirFormularioEdicao(id);
+    }
+}
+
 export function iniciarNinhos() {
+
+        // Guarda o ID do ninho que está a ser editado.
+    let ninhoEmEdicao = null;
+
     const formulario = document.getElementById('form-ninho');
+
+    const tituloFormulario = document.getElementById('titulo-formulario-ninho');
+    const botaoGuardar = document.getElementById('botao-guardar-ninho');
+
     const mensagem = document.getElementById('mensagem-ninho');
     const tabela = document.getElementById('lista-ninhos');
     const seletorLocal = document.getElementById('localizacao');
@@ -237,9 +254,115 @@ if (campoTipoArvore) {
         atualizarDetalhesLocal();
         limparFotografiaSelecionada();
 
+        ninhoEmEdicao = null;
+
+        if (tituloFormulario) {
+            tituloFormulario.textContent = 'Registar novo ninho';
+        }
+
+        if (botaoGuardar) {
+            botaoGuardar.textContent = 'Registar ninho';
+        }
+
         mensagem.textContent = '';
         mensagem.style.color = '';
         }
+
+        // Prepara o formulário para editar um ninho existente.
+abrirFormularioEdicao = function (id) {
+    const ninho = obterNinhos().find(n => n.id === id);
+
+    if (!ninho) {
+        mensagem.textContent = 'Não foi possível encontrar o ninho.';
+        mensagem.style.color = 'red';
+        return;
+    }
+
+    // Abre a secção dos ninhos.
+    const botaoNavegacao = document.querySelector('[data-seccao="ninhos"]');
+    if (botaoNavegacao) {
+        botaoNavegacao.click();
+    }
+
+    ninhoEmEdicao = ninho.id;
+
+    if (tituloFormulario) {
+        tituloFormulario.textContent = 'Editar ninho';
+    }
+
+    if (botaoGuardar) {
+        botaoGuardar.textContent = 'Guardar alterações';
+    }
+
+    mensagem.textContent = '';
+
+    // Preenche os campos com os dados existentes.
+    const campos = [
+        'data', 'contactante', 'telefone', 'morada', 'freguesia',
+        'tipoNinho', 'localizacao', 'tipoEdificio', 'tipoTelhado',
+        'tipoPoste', 'zonaPoste', 'outroLocal', 'cota',
+        'alturaNinho', 'larguraNinho', 'latitude', 'longitude',
+        'observacoes', 'estado'
+    ];
+
+    campos.forEach(nome => {
+        const campo = formulario.elements.namedItem(nome);
+        if (campo) {
+            campo.value = ninho[nome] || '';
+        }
+    });
+
+    // Preenche a unidade responsável.
+    const campoUnidade = formulario.elements.namedItem('unidade');
+    const campoOutraUnidade = document.getElementById('outra-unidade');
+
+    if (campoUnidade) {
+        const existeOpcao = Array.from(campoUnidade.options)
+            .some(opcao => opcao.value === ninho.unidade);
+
+        campoUnidade.value = existeOpcao ? ninho.unidade : 'Outra';
+
+        if (!existeOpcao && campoOutraUnidade) {
+            campoOutraUnidade.value = ninho.unidade || '';
+        }
+
+        atualizarOutraUnidade();
+    }
+
+    // Preenche o tipo de árvore.
+    const campoArvore = formulario.elements.namedItem('tipoArvore');
+    const campoOutraArvore = document.getElementById('outra-arvore');
+
+    if (campoArvore) {
+        const existeOpcao = Array.from(campoArvore.options)
+            .some(opcao => opcao.value === ninho.tipoArvore);
+
+        campoArvore.value = existeOpcao ? ninho.tipoArvore : 'Outra';
+
+        if (!existeOpcao && campoOutraArvore) {
+            campoOutraArvore.value = ninho.tipoArvore || '';
+        }
+
+        atualizarOutraArvore();
+
+        
+    }
+
+    atualizarDetalhesLocal();
+
+    // Mantém a fotografia atual e apresenta-a.
+    if (ninho.fotografia) {
+        const imagem = document.getElementById('imagem-fotografia');
+        const preVisualizacao = document.getElementById('pre-visualizacao-fotografia');
+
+        if (imagem && preVisualizacao) {
+            imagem.src = ninho.fotografia;
+            preVisualizacao.hidden = false;
+        }
+    }
+
+    formulario.scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
 
     // Atualiza a tabela com os ninhos guardados.
     function atualizarTabela() {
@@ -337,7 +460,7 @@ atualizarOutraUnidade();
             latitude: dados.get('latitude'),
             longitude: dados.get('longitude'),
             observacoes: dados.get('observacoes').trim(),
-            estado: 'Pendente'
+            estado: dados.get('estado') || 'Pendente'
         };
 
         // Guarda primeiro o registo e depois a fotografia, se existir.
@@ -361,31 +484,55 @@ atualizarOutraUnidade();
     });
 
     function guardarNinhoComFotografia(ninho, fotografia) {
-        try {
-            ninho.fotografia = fotografia;
-
-            adicionarNinho(ninho);
-
-            atualizarTabela();
-            atualizarProximoNumeroRegisto();
-
-            document.dispatchEvent(
-                new CustomEvent('ninhos-atualizados')
+    try {
+        if (ninhoEmEdicao) {
+            const ninhoOriginal = obterNinhos().find(
+                n => n.id === ninhoEmEdicao
             );
 
-            limparFormulario();
+            if (!ninhoOriginal) {
+                throw new Error('Não foi possível encontrar o ninho original.');
+            }
 
-            mensagem.textContent = 'Ninho registado com sucesso!';
-            mensagem.style.color = '#276749';
+            ninho.fotografia = fotografia || ninhoOriginal.fotografia || null;
 
-        } catch (erro) {
-            console.error('Erro ao guardar o ninho:', erro);
+            // Preserva o número, a referência e o estado atuais.
+            ninho.identificador = ninhoOriginal.identificador;
+            ninho.referencia = ninhoOriginal.referencia;
+            ninho.estado = ninhoOriginal.estado;
 
-            mensagem.textContent =
-                'Não foi possível guardar o ninho. Verifica o espaço de armazenamento.';
-            mensagem.style.color = '#c53030';
+            atualizarRegisto('ninhos', ninhoEmEdicao, ninho);
+
+        } else {
+            ninho.fotografia = fotografia;
+            adicionarNinho(ninho);
         }
+
+        atualizarTabela();
+        atualizarProximoNumeroRegisto();
+
+        document.dispatchEvent(
+            new CustomEvent('ninhos-atualizados')
+        );
+
+        const estavaEmEdicao = ninhoEmEdicao !== null;
+
+        limparFormulario();
+
+        mensagem.textContent = estavaEmEdicao
+            ? 'Ninho atualizado com sucesso!'
+            : 'Ninho registado com sucesso!';
+
+        mensagem.style.color = '#276749';
+
+    } catch (erro) {
+        console.error('Erro ao guardar o ninho:', erro);
+
+        mensagem.textContent =
+            'Não foi possível guardar o ninho. Verifica o espaço de armazenamento.';
+        mensagem.style.color = '#c53030';
     }
+}
 
         // Obter a localização GPS do equipamento.
     const botaoGPS = document.getElementById('obter-localizacao-gps');
