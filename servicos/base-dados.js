@@ -275,6 +275,7 @@ export function adicionarNinho(ninho) {
     const novoNinho = {
         ...ninho,
         id: ninho.id || crypto.randomUUID(),
+        identificador: ninho.identificador || gerarIdentificadorNinho(),
         criadoEm: ninho.criadoEm || agora,
         atualizadoEm: agora
     };

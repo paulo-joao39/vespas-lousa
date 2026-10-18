@@ -191,15 +191,15 @@ if (campoTipoArvore) {
 
         ninhos.forEach(ninho => {
             const linha = document.createElement('tr');
-
-            const valores = [
-                ninho.referencia,
-                ninho.data,
-                ninho.freguesia,
-                ninho.localizacao,
-                ninho.tipoNinho || '',
-                ninho.estado
-            ];
+        const valores = [
+            ninho.identificador || '',
+            ninho.referencia || '',
+            ninho.data || '',
+            ninho.freguesia || '',
+            ninho.localizacao || '',
+            ninho.tipoNinho || '',
+            ninho.estado || ''
+        ];
 
             valores.forEach(valor => {
                 const celula = document.createElement('td');
