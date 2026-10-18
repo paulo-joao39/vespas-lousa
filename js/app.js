@@ -2,11 +2,13 @@ import { iniciarNavegacao } from './navegacao.js';
 import { iniciarNinhos } from './ninhos.js';
 import { atualizarDashboard } from './dashboard.js';
 import { iniciarTratamentos } from './tratamentos.js';
+import { iniciarFicha } from './ficha.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     iniciarNavegacao();
     iniciarNinhos();
     iniciarTratamentos();
+    atualizarDashboard();
     atualizarDashboard();
 
     document.addEventListener('ninhos-atualizados', () => {
