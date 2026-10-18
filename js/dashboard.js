@@ -19,7 +19,7 @@ export function atualizarDashboard() {
     document.getElementById('ninhos-pendentes').textContent = pendentes;
     document.getElementById('ninhos-tratados').textContent = tratados;
 
-    // Mostrar as ocorrências que têm coordenadas GPS.
+    // Elementos das ocorrências georreferenciadas.
     const contadorGPS = document.getElementById('total-georreferenciadas');
     const listaGPS = document.getElementById('lista-georreferenciadas');
 
@@ -27,18 +27,25 @@ export function atualizarDashboard() {
         return;
     }
 
+    // Mostrar apenas ninhos tratados com coordenadas GPS válidas.
     const georreferenciados = ninhos.filter(ninho => {
-    if (ninho.estado !== 'Tratado') {
-        return false;
-    }
+        if (ninho.estado !== 'Tratado') {
+            return false;
+        }
+
+        if (
+            ninho.latitude === '' ||
+            ninho.longitude === '' ||
+            ninho.latitude == null ||
+            ninho.longitude == null
+        ) {
+            return false;
+        }
+
         const latitude = Number(ninho.latitude);
         const longitude = Number(ninho.longitude);
 
-        return ninho.latitude !== '' &&
-            ninho.longitude !== '' &&
-            ninho.latitude != null &&
-            ninho.longitude != null &&
-            Number.isFinite(latitude) &&
+        return Number.isFinite(latitude) &&
             Number.isFinite(longitude) &&
             latitude >= -90 &&
             latitude <= 90 &&
@@ -47,84 +54,92 @@ export function atualizarDashboard() {
     });
 
     contadorGPS.textContent =
-        `${georreferenciados.length} ocorrência(s) com coordenadas GPS`;
+        `${georreferenciados.length} ocorrência(s) tratadas com coordenadas GPS`;
 
     listaGPS.replaceChildren();
 
     if (georreferenciados.length === 0) {
         const mensagem = document.createElement('p');
+
         mensagem.textContent =
-            'Ainda não existem ocorrências com coordenadas GPS válidas.';
+            'Ainda não existem ocorrências tratadas com coordenadas GPS válidas.';
+
         listaGPS.appendChild(mensagem);
         return;
     }
 
+    // Criar um cartão para cada ninho tratado.
     georreferenciados.forEach(ninho => {
         const cartao = document.createElement('article');
         cartao.className = 'cartao';
 
-       const cartao = document.createElement('article');
-cartao.className = 'cartao';
+        const titulo = document.createElement('h4');
 
-const titulo = document.createElement('h4');
-titulo.textContent =
-    `Ninho ${ninho.identificador || ninho.referencia || 'Sem número'}`;
+        titulo.textContent =
+            `Ninho ${ninho.identificador || ninho.referencia || 'Sem número'}`;
 
-titulo.style.cursor = 'pointer';
-titulo.style.color = '#24558a';
-titulo.title = 'Clique para consultar todos os dados do ninho';
+        titulo.style.cursor = 'pointer';
+        titulo.style.color = '#24558a';
+        titulo.title = 'Clique para consultar todos os dados do ninho';
 
-const resumo = document.createElement('p');
-resumo.textContent =
-    `${ninho.freguesia || 'Freguesia não indicada'} — ` +
-    `${ninho.tipoNinho || 'Tipo não indicado'} — ` +
-    `Estado: ${ninho.estado || 'Não indicado'}`;
+        const resumo = document.createElement('p');
 
-const detalhes = document.createElement('div');
-detalhes.style.display = 'none';
+        resumo.textContent =
+            `${ninho.freguesia || 'Freguesia não indicada'} — ` +
+            `${ninho.tipoNinho || 'Tipo não indicado'} — ` +
+            `Estado: ${ninho.estado || 'Não indicado'}`;
 
-const adicionarDado = (rotulo, valor) => {
-    const paragrafo = document.createElement('p');
-    paragrafo.textContent = `${rotulo}: ${valor || 'Não indicado'}`;
-    detalhes.appendChild(paragrafo);
-};
+        // Os detalhes ficam escondidos até clicar no nome.
+        const detalhes = document.createElement('div');
+        detalhes.style.display = 'none';
 
-adicionarDado('Identificador', ninho.identificador);
-adicionarDado('Referência', ninho.referencia);
-adicionarDado('Freguesia', ninho.freguesia);
-adicionarDado('Tipo de ninho', ninho.tipoNinho);
-adicionarDado('Estado', ninho.estado);
-adicionarDado('Latitude', ninho.latitude);
-adicionarDado('Longitude', ninho.longitude);
+        const adicionarDado = (rotulo, valor) => {
+            const paragrafo = document.createElement('p');
 
-if (ninho.fotografia) {
-    const fotografia = document.createElement('img');
-    fotografia.src = ninho.fotografia;
-    fotografia.alt = 'Fotografia do ninho';
-    fotografia.style.maxWidth = '100%';
-    fotografia.style.maxHeight = '350px';
-    fotografia.style.display = 'block';
-    fotografia.style.marginTop = '10px';
+            paragrafo.textContent =
+                `${rotulo}: ${valor ?? 'Não indicado'}`;
 
-    detalhes.appendChild(fotografia);
-}
+            detalhes.appendChild(paragrafo);
+        };
 
-const mapa = document.createElement('a');
-mapa.href =
-    `https://www.google.com/maps?q=${encodeURIComponent(ninho.latitude)},${encodeURIComponent(ninho.longitude)}`;
-mapa.target = '_blank';
-mapa.rel = 'noopener noreferrer';
-mapa.textContent = '📍 Abrir no Google Maps';
+        adicionarDado('Identificador', ninho.identificador);
+        adicionarDado('Referência', ninho.referencia);
+        adicionarDado('Freguesia', ninho.freguesia);
+        adicionarDado('Tipo de ninho', ninho.tipoNinho);
+        adicionarDado('Estado', ninho.estado);
+        adicionarDado('Latitude', ninho.latitude);
+        adicionarDado('Longitude', ninho.longitude);
 
-detalhes.appendChild(mapa);
+        if (ninho.fotografia) {
+            const fotografia = document.createElement('img');
 
-titulo.addEventListener('click', () => {
-    detalhes.style.display =
-        detalhes.style.display === 'none' ? 'block' : 'none';
-});
+            fotografia.src = ninho.fotografia;
+            fotografia.alt = 'Fotografia do ninho';
+            fotografia.style.maxWidth = '100%';
+            fotografia.style.maxHeight = '350px';
+            fotografia.style.display = 'block';
+            fotografia.style.marginTop = '10px';
 
-cartao.append(titulo, resumo, detalhes);
-listaGPS.appendChild(cartao);
+            detalhes.appendChild(fotografia);
+        }
+
+        const mapa = document.createElement('a');
+
+        mapa.href =
+            `https://www.google.com/maps?q=${encodeURIComponent(ninho.latitude)},${encodeURIComponent(ninho.longitude)}`;
+
+        mapa.target = '_blank';
+        mapa.rel = 'noopener noreferrer';
+        mapa.textContent = '📍 Abrir no Google Maps';
+
+        detalhes.appendChild(mapa);
+
+        titulo.addEventListener('click', () => {
+            detalhes.style.display =
+                detalhes.style.display === 'none' ? 'block' : 'none';
+        });
+
+        cartao.append(titulo, resumo, detalhes);
+        listaGPS.appendChild(cartao);
     });
 }
-
