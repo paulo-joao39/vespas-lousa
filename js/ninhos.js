@@ -298,12 +298,27 @@ abrirFormularioEdicao = function (id) {
 
     // Preenche os campos com os dados existentes.
     const campos = [
-        'data', 'contactante', 'telefone', 'morada', 'freguesia',
-        'tipoNinho', 'localizacao', 'tipoEdificio', 'tipoTelhado',
-        'tipoPoste', 'zonaPoste', 'outroLocal', 'cota',
-        'alturaNinho', 'larguraNinho', 'latitude', 'longitude',
-        'observacoes', 'estado'
-    ];
+    'data',
+    'contactante',
+    'telefone',
+    'morada',
+    'freguesia',
+    'tipoNinho',
+    'localizacao',
+    'tipoArvore',
+    'tipoEdificio',
+    'tipoTelhado',
+    'tipoPoste',
+    'zonaPoste',
+    'outroLocal',
+    'cota',
+    'alturaNinho',
+    'larguraNinho',
+    'latitude',
+    'longitude',
+    'observacoes',
+    'estado'
+];
 
     campos.forEach(nome => {
         const campo = formulario.elements.namedItem(nome);
@@ -345,7 +360,7 @@ abrirFormularioEdicao = function (id) {
 
         atualizarOutraArvore();
 
-        
+
     }
 
     atualizarDetalhesLocal();
