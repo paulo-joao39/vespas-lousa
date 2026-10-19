@@ -65,13 +65,14 @@ export function iniciarTratamentos() {
         const ninhoId = dados.get('ninhoId');
 
         const tratamento = {
-            id: crypto.randomUUID(),
-            ninhoId,
-            data: dados.get('data'),
-            metodo: dados.get('metodo').trim(),
-            observacoes: dados.get('observacoes').trim(),
-            criadoEm: new Date().toISOString()
-        };
+        id: crypto.randomUUID(),
+        ninhoId,
+        data: dados.get('data'),
+        metodo: dados.get('metodo').trim(),
+        responsavel: (dados.get('responsavel') || '').trim(),
+        observacoes: dados.get('observacoes').trim(),
+        criadoEm: new Date().toISOString()
+    };
 
         const ninhos = obterNinhos();
         const ninho = ninhos.find(registo => registo.id === ninhoId);

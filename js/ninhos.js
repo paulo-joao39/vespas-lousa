@@ -452,6 +452,7 @@ atualizarOutraUnidade();
             referencia: '',
             identificador: '',
             data: dados.get('data'),
+            criadoEm: new Date().toISOString(),
             unidade: dados.get('unidade') === 'Outra'
                 ? dados.get('outraUnidade').trim()
                 : dados.get('unidade').trim(),

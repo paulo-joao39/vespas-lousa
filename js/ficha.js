@@ -103,14 +103,24 @@ export function iniciarFicha() {
         }
 
         const titulo = document.createElement('h3');
+
         titulo.textContent =
-            `Ficha do ninho ${ninho.identificador || ninho.referencia || 'Sem número'}`;
+            `FICHA Nº ${ninho.identificador || ninho.referencia || 'Sem número'}`;
+
+        titulo.style.fontSize = '1.4rem';
+        titulo.style.marginBottom = '20px';
+        titulo.style.paddingBottom = '10px';
+        titulo.style.borderBottom = '2px solid #276749';
+
         conteudo.appendChild(titulo);
 
         const campos = [
             ['Identificador', ninho.identificador],
             ['Referência', ninho.referencia],
             ['Data da ocorrência', ninho.data],
+            ['Data do registo', ninho.criadoEm
+            ? new Date(ninho.criadoEm).toLocaleDateString('pt-PT')
+            : 'Não disponível'],
             ['Unidade responsável', ninho.unidade],
             ['Contactante', ninho.contactante],
             ['Telefone', ninho.telefone],
@@ -124,7 +134,7 @@ export function iniciarFicha() {
             ['Tipo de poste', ninho.tipoPoste],
             ['Zona do poste', ninho.zonaPoste],
             ['Outro local', ninho.outroLocal],
-            ['Cota (m)', ninho.cota],
+            ['Altura em relação ao chão (m)', ninho.cota],
             ['Altura do ninho (cm)', ninho.alturaNinho],
             ['Largura do ninho (cm)', ninho.larguraNinho],
             ['Latitude', ninho.latitude],
@@ -133,9 +143,79 @@ export function iniciarFicha() {
             ['Observações', ninho.observacoes]
         ];
 
-        campos.forEach(([rotulo, valor]) => {
-            adicionarCampo(conteudo, rotulo, valor);
-        });
+        // Organiza os campos da ficha por secções.
+const secoesFicha = [
+    {
+        titulo: '📋 Identificação do ninho',
+        campos: [
+            'Identificador',
+            'Referência',
+            'Data da ocorrência',
+            'Unidade responsável',
+            'Contactante',
+            'Telefone'
+        ]
+    },
+    {
+        titulo: '📍 Localização',
+        campos: [
+            'Morada',
+            'Freguesia',
+            'Localização',
+            'Tipo de árvore',
+            'Tipo de edifício',
+            'Tipo de telhado',
+            'Tipo de poste',
+            'Zona do poste',
+            'Outro local',
+            'Latitude',
+            'Longitude'
+        ]
+    },
+    {
+        titulo: '📏 Características do ninho',
+        campos: [
+            'Tipo de ninho',
+            'Cota (m)',
+            'Altura do ninho (cm)',
+            'Largura do ninho (cm)'
+        ]
+    },
+    {
+        titulo: '📝 Observações',
+        campos: [
+            'Observações'
+        ]
+    }
+];
+
+    secoesFicha.forEach(secao => {
+    const bloco = document.createElement('div');
+
+    bloco.style.marginBottom = '20px';
+    bloco.style.padding = '15px';
+    bloco.style.border = '1px solid #d1d5db';
+    bloco.style.borderRadius = '8px';
+    bloco.style.backgroundColor = '#ffffff';
+
+    const subtitulo = document.createElement('h4');
+    subtitulo.textContent = secao.titulo;
+    subtitulo.style.marginTop = '0';
+    subtitulo.style.marginBottom = '12px';
+    subtitulo.style.color = '#276749';
+
+    bloco.appendChild(subtitulo);
+
+    secao.campos.forEach(rotulo => {
+        const campo = campos.find(item => item[0] === rotulo);
+
+        if (campo) {
+            adicionarCampo(bloco, campo[0], campo[1]);
+        }
+    });
+
+    conteudo.appendChild(bloco);
+    });
 
         if (ninho.fotografia) {
             const tituloFoto = document.createElement('h4');
@@ -174,7 +254,13 @@ export function iniciarFicha() {
         }
 
         const tituloTratamentos = document.createElement('h3');
-        tituloTratamentos.textContent = 'Histórico de tratamentos';
+        tituloTratamentos.textContent = '💉 HISTÓRICO DE TRATAMENTOS';
+        tituloTratamentos.style.marginTop = '25px';
+        tituloTratamentos.style.marginBottom = '15px';
+        tituloTratamentos.style.paddingBottom = '10px';
+        tituloTratamentos.style.borderBottom = '2px solid #276749';
+        tituloTratamentos.style.color = '#276749';
+
         conteudo.appendChild(tituloTratamentos);
 
         const tratamentos = obterTratamentos().filter(
@@ -191,12 +277,19 @@ export function iniciarFicha() {
             tratamentos.forEach((tratamento, indice) => {
                 const bloco = document.createElement('div');
 
+                bloco.style.marginBottom = '15px';
+                bloco.style.padding = '15px';
+                bloco.style.border = '1px solid #d1d5db';
+                bloco.style.borderRadius = '8px';
+                bloco.style.backgroundColor = '#f9fafb';
+
                 const subtitulo = document.createElement('h4');
                 subtitulo.textContent = `Tratamento ${indice + 1}`;
                 bloco.appendChild(subtitulo);
 
                 adicionarCampo(bloco, 'Data', tratamento.data);
                 adicionarCampo(bloco, 'Método', tratamento.metodo);
+                adicionarCampo(bloco, 'Responsável', tratamento.responsavel);
                 adicionarCampo(bloco, 'Observações', tratamento.observacoes);
 
                 conteudo.appendChild(bloco);
