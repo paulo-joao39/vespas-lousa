@@ -107,7 +107,7 @@ export function iniciarFicha() {
             conteudo.appendChild(mensagem);
             return;
         }
-
+ 
         const titulo = document.createElement('h3');
 
         titulo.textContent =
