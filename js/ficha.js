@@ -92,7 +92,13 @@ export function iniciarFicha() {
         const id = seletor.value;
         const ninho = obterNinhos().find(item => item.id === id);
 
+        const cabecalho = document.getElementById('cabecalho-ficha');
+
         conteudo.replaceChildren();
+
+        if (cabecalho) {
+            conteudo.appendChild(cabecalho);
+        }
 
         if (!ninho) {
             const mensagem = document.createElement('p');
