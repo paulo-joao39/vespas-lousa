@@ -91,3 +91,113 @@ button {
         font-size: 15px;
     }
 }
+
+/* ========================================
+   IMPRESSÃO PROFISSIONAL DA FICHA — PDF
+   ======================================== */
+
+@page {
+    size: A4;
+    margin: 18mm 15mm 18mm 15mm;
+}
+
+@media print {
+
+    /* Aspeto geral do documento */
+    body {
+        background: #ffffff !important;
+        color: #222222 !important;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 10pt;
+        line-height: 1.4;
+    }
+
+    /* Retira os fundos e margens da aplicação */
+    main {
+        width: 100%;
+        max-width: none;
+        min-height: 0;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Esconde elementos de navegação e formulários */
+    nav,
+    header,
+    footer,
+    button,
+    form,
+    .sem-impressao {
+        display: none !important;
+    }
+
+    /* Evita que a ficha fique demasiado larga */
+    #conteudo-ficha {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background: #ffffff !important;
+        color: #222222 !important;
+    }
+
+    /* Título principal da ficha */
+    #conteudo-ficha > h3:first-child {
+        font-size: 18pt !important;
+        text-align: center;
+        color: #1f5137 !important;
+        border-bottom: 2px solid #1f5137;
+        padding-bottom: 12px;
+        margin-bottom: 20px;
+    }
+
+    /* Secções da ficha */
+    #conteudo-ficha > div {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin-bottom: 14px !important;
+        padding: 12px !important;
+        border: 1px solid #cbd5e0 !important;
+        border-radius: 4px !important;
+        background: #ffffff !important;
+    }
+
+    /* Títulos das secções */
+    #conteudo-ficha h4 {
+        font-size: 11pt;
+        color: #1f5137 !important;
+        border-bottom: 1px solid #d1d5db;
+        padding-bottom: 6px;
+        margin-bottom: 10px;
+    }
+
+    /* Texto dos campos */
+    #conteudo-ficha p {
+        margin: 5px 0;
+        overflow-wrap: anywhere;
+    }
+
+    #conteudo-ficha strong {
+        color: #222222 !important;
+    }
+
+    /* Fotografias */
+    #conteudo-ficha img {
+        max-width: 100% !important;
+        max-height: 180mm !important;
+        object-fit: contain;
+    }
+
+    /* Ligações */
+    #conteudo-ficha a {
+        color: #222222 !important;
+        text-decoration: none;
+        overflow-wrap: anywhere;
+    }
+
+    /* O histórico pode continuar noutra página */
+    #conteudo-ficha h3 {
+        break-after: avoid;
+        page-break-after: avoid;
+    }
+}
+
